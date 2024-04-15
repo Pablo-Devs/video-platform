@@ -5,7 +5,15 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   verified: { type: Boolean, default: false },
   resetToken: { type: String },
-  resetTokenExpiry: { type: Date }
+  resetTokenExpiry: { type: Date },
+  isAdmin: { type: Boolean, default: false },
+  uploadedVideos: [
+    {
+      title: { type: String, required: true },
+      description: { type: String },
+      filePath: { type: String, required: true }
+    }
+  ]
 });
 
 const User = mongoose.model('User', userSchema);
