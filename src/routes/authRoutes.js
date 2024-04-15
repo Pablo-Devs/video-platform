@@ -10,6 +10,15 @@ dotenv.config();
 
 const router = express.Router();
 
+// Configure email transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
 // User Signup
 router.post('/signup', async (req, res) => {
     try {
@@ -30,12 +39,8 @@ router.post('/signup', async (req, res) => {
         await user.save();
 
         // Send verification email
-        const transporter = nodemailer.createTransport({
-            // Configure email transporter (e.g., Gmail, SendGrid)
-        });
-
         const mailOptions = {
-            from: 'blanksonpaul3@gmail.com',
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Account Verification',
             text: `Click the following link to verify your account: ${process.env.CLIENT_URL}/verify/${verificationToken}`
