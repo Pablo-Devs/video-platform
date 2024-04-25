@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 // User Signup
 router.post('/signup', async (req, res) => {
     try {
-        const { email, password, isAdmin } = req.body;
+        const { email, password } = req.body;
 
         // Check if user already exists
         let user = await User.findOne({ email });
@@ -36,14 +36,14 @@ router.post('/signup', async (req, res) => {
 
         // Create new user with verification token
         const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        user = new User({ email, password: hashedPassword, isAdmin, verificationToken });
+        user = new User({ email, password: hashedPassword, isAdmin: false, verificationToken });
         await user.save();
 
         // Send verification email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Account Verification',
+            subject: 'Bespoke Account Verification',
             text: `Click the following link to verify your account: ${process.env.CLIENT_URL}/verify/${verificationToken}`
         };
 
@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
         // Generate JWT token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
+        res.json({ token, message: 'Login successful'});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
