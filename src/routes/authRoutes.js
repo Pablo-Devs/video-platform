@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import User from '../models/User';
+import User from '../models/User.js';
 
 // Load environment variables from .env file
 import dotenv from 'dotenv';

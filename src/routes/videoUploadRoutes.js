@@ -1,8 +1,8 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import Video from '../models/Video';
-import User from '../models/User';
+import Video from '../models/Video.js';
+import User from '../models/User.js';
 
 const router = express.Router();
 
