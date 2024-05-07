@@ -14,15 +14,20 @@ const app = express();
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+app.use(express.static('public'));
+
+// view engine setup
+app.set('view engine', 'ejs');
+
 // MongoDB connection
 mongoose.connect(`${process.env.MONGO_URL}`)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Define routes
-app.use('/api/auth', authRoutes);
-app.use('/api', fetchVideosRoutes);
-app.use('/api', videoUploadRoutes);
+app.use('/', authRoutes);
+app.use('/', fetchVideosRoutes);
+app.use('/', videoUploadRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

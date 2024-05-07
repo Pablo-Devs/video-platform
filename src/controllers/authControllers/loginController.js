@@ -61,3 +61,7 @@ export async function adminLoginPost(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export function loginPage(req, res) {
+    res.render('login');
+}

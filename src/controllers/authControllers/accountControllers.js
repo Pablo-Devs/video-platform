@@ -8,9 +8,12 @@ dotenv.config();
 // Configure email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_APP_PASS
     }
 });
 
@@ -56,9 +59,12 @@ export async function passwordResetRequest(req, res) {
         );
 
         const mailOptions = {
-            from: 'blanksonpaul3@gmail.com',
+            from: {
+                name: 'Bespoke Video Platform',
+                address: process.env.EMAIL_USER
+            },
             to: email,
-            subject: 'Password Reset',
+            subject: 'Bespoke Video Platform Password Reset',
             text: `Click the following link to reset your password: ${process.env.CLIENT_URL}/reset-password/${resetToken}`
         };
 

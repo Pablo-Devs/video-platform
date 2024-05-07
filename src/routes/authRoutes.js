@@ -1,31 +1,37 @@
 import express from 'express';
-import { userLoginPost, adminLoginPost } from '../controllers/authControllers/loginController.js';
+import { userLoginPost, adminLoginPost, loginPage } from '../controllers/authControllers/loginController.js';
 import { tokenVerification } from '../controllers/authControllers/accountControllers.js';
 import { passwordResetRequest, resetPassword } from '../controllers/authControllers/accountControllers.js';
-import { userSignupPost, adminSignupPost } from '../controllers/authControllers/signupController.js';
+import { userSignupPost, adminSignupPost, signupPage } from '../controllers/authControllers/signupController.js';
 // Load environment variables from .env file
 import dotenv from 'dotenv';
 dotenv.config();
 
 const router = express.Router();
 
-// User Signup
+// Login Page
+router.get('/login', loginPage);
+
+// Signup Page
+router.get('/signup', signupPage);
+
+// User Signup Post
 router.post('/signup', userSignupPost);
 
-// User Login
+// User Login Post
 router.post('/login', userLoginPost);
 
-// Admin Signup
-router.post('/admin/signup', adminSignupPost);
+// Admin Signup Post
+router.post('/admin-signup', adminSignupPost);
 
-// Admin Login
-router.post('/admin/login', adminLoginPost);
+// Admin Login Post
+router.post('/admin-login', adminLoginPost);
 
 // account Verification
 router.get('/verify/:token', tokenVerification);
 
 // Password Reset Request
-router.post('/reset-password', passwordResetRequest);
+router.post('/forgot-password', passwordResetRequest);
 
 // Password Reset
 router.post('/reset-password/:token', resetPassword);
