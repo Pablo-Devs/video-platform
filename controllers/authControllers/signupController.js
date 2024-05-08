@@ -2,6 +2,7 @@ import User from "../../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import zxcvbn from "zxcvbn";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -26,6 +27,12 @@ export async function userSignupPost(req, res) {
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Validate password strength
+        const passwordStrength = zxcvbn(password);
+        if (passwordStrength.score < 3) {
+            return res.status(400).json({ message: 'Password is too weak. Please choose a stronger password.' });
         }
 
         // Hash password 
@@ -64,6 +71,12 @@ export async function adminSignupPost(req, res) {
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Validate password strength
+        const passwordStrength = zxcvbn(password);
+        if (passwordStrength.score < 3) {
+            return res.status(400).json({ message: 'Password is too weak. Please choose a stronger password.' });
         }
 
         // Hash password
