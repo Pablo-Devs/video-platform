@@ -1,6 +1,8 @@
 import User from "../../models/User.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -16,6 +18,16 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_APP_PASS
     }
 });
+
+// Function to generate a random OTP
+function generateOTP() {
+    const digits = '0123456789';
+    let OTP = '';
+    for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+    }
+    return OTP;
+}
 
 export async function tokenVerification(req, res) {
     try {
@@ -49,28 +61,32 @@ export async function passwordResetRequest(req, res) {
     try {
         const { email } = req.body;
 
-        // Generate reset token
-        const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Generate OTP
+        const otp = generateOTP();
 
-        // Update user with reset token and expiry
+        // Hash the OTP (optional)
+        const hashedOTP = await bcrypt.hash(otp, 10);
+
+        // Update user with hashed OTP
         await User.findOneAndUpdate(
             { email },
-            { $set: { resetToken, resetTokenExpiry: Date.now() + 3600000 } }
+            { $set: { resetOTP: hashedOTP, resetOTPCreatedAt: Date.now() } }
         );
 
+        // Send OTP via email
         const mailOptions = {
             from: {
                 name: 'Bespoke Video Platform',
                 address: process.env.EMAIL_USER
             },
             to: email,
-            subject: 'Bespoke Video Platform Password Reset',
-            text: `Click the following link to reset your password: ${process.env.CLIENT_URL}/reset-password/${resetToken}`
+            subject: 'Bespoke Video Platform Password Reset OTP',
+            text: `Your OTP for password reset is: ${otp}`
         };
 
         await transporter.sendMail(mailOptions);
 
-        res.json({ message: 'Password reset email sent' });
+        res.json({ message: 'Password reset OTP sent to your email' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -79,28 +95,36 @@ export async function passwordResetRequest(req, res) {
 
 export async function resetPassword(req, res) {
     try {
-        const { token } = req.params;
-        const { password } = req.body;
+        const { email, otp, newPassword } = req.body;
 
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded) {
-            return res.status(400).json({ message: 'Invalid token' });
+        // Retrieve user by email
+        const user = await User.findOne({ email });
+
+        // Check if user exists and OTP matches
+        if (!user || !user.resetOTP) {
+            return res.status(400).json({ message: 'Invalid email or OTP' });
         }
 
-        // Check token expiry
-        const user = await User.findOne({ email: decoded.email });
-        if (!user || Date.now() > user.resetTokenExpiry) {
-            return res.status(400).json({ message: 'Token expired. Request a new one' });
+        // Verify OTP
+        const otpMatch = await bcrypt.compare(otp, user.resetOTP);
+        if (!otpMatch) {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
+
+        // Check OTP expiry (e.g., OTP valid for 10 minutes)
+        const otpExpirationTime = 10 * 60 * 1000; // 10 minutes in milliseconds
+        const otpCreationTime = new Date(user.resetOTPCreatedAt).getTime();
+        if (Date.now() > otpCreationTime + otpExpirationTime) {
+            return res.status(400).json({ message: 'OTP expired. Request a new one' });
         }
 
         // Hash new password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update user password and reset token
+        // Update user password and reset OTP
         await User.findOneAndUpdate(
-            { email: decoded.email },
-            { $set: { password: hashedPassword, resetToken: null, resetTokenExpiry: null } }
+            { email },
+            { $set: { password: hashedPassword, resetOTP: null, resetOTPCreatedAt: null } }
         );
 
         res.json({ message: 'Password reset successfully' });
@@ -109,3 +133,15 @@ export async function resetPassword(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export function forgotPasswordPage(req, res) {
+    res.render('forgot-password');
+}
+
+export function resetPasswordPage(req, res) {
+    res.render('reset-password');
+}
+
+// export function accountVerification(req, res) {
+//     res.render('verify-email');
+// }

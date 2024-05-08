@@ -7,6 +7,9 @@ import zxcvbn from "zxcvbn";
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Regular expression for email validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // Configure email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -21,7 +24,12 @@ const transporter = nodemailer.createTransport({
 
 export async function userSignupPost(req, res) {
     try {
-        const { email, password } = req.body;
+        const { username, email, password } = req.body;
+
+        // Validate email format
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
 
         // Check if user already exists
         let user = await User.findOne({ email });
@@ -40,7 +48,7 @@ export async function userSignupPost(req, res) {
 
         // Create new user with verification token
         const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        user = new User({ email, password: hashedPassword, isAdmin: false, verificationToken });
+        user = new User({ username, email, password: hashedPassword, isAdmin: false, verificationToken });
         await user.save();
 
         // Send verification email
@@ -65,7 +73,12 @@ export async function userSignupPost(req, res) {
 
 export async function adminSignupPost(req, res) {
     try {
-        const { email, password } = req.body;
+        const { username, email, password } = req.body;
+
+        // Validate email format
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
 
         // Check if user already exists
         let user = await User.findOne({ email });
@@ -84,7 +97,7 @@ export async function adminSignupPost(req, res) {
 
         // Create new admin user with isAdmin set to true and verification token
         const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        user = new User({ email, password: hashedPassword, isAdmin: true, verificationToken });
+        user = new User({ username, email, password: hashedPassword, isAdmin: true, verificationToken });
         await user.save();
 
         // Send verification email
