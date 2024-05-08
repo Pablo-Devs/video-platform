@@ -25,6 +25,7 @@ mongoose.connect(`${process.env.MONGO_URL}`)
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Define routes
+app.get('/', (req, res) => res.render('home'));
 app.use('/', authRoutes);
 app.use('/', fetchVideosRoutes);
 app.use('/', videoUploadRoutes);

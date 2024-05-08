@@ -112,26 +112,6 @@ header .btn{
   display: inline-block;
   font-size: 0.8em;
 }
-.recipes{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 30px;
-  row-gap: 80px;
-  margin: 80PX AUTO;
-  max-width: 1200px;
-}
-.recipe{
-  display: inline-block;
-  border-radius: 20px;
-  background: white;
-  position: relative;
-  text-align: center;
-  padding: 0 20px 30px 20px
-}
-.recipe img{
-  width: 100px;
-  margin: -30px auto 20px;
-}
 footer{
   text-align: center;
   margin-top: 120px;
