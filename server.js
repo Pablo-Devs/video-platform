@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import fetchVideosRoutes from './routes/fetchVideosRoutes.js'
 import videoUploadRoutes from './routes/videoUploadRoutes.js';
-import { requireAuth } from './middlewares/authMiddlewares.js';
+import { requireAuth, checkUser } from './middlewares/authMiddlewares.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -31,6 +31,7 @@ mongoose.connect(`${process.env.MONGO_URL}`)
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Define routes
+app.get('*', checkUser);
 app.get('/', (req, res) => res.render('home'));
 app.get('/upload-videos', requireAuth, (req, res) => res.render('upload-videos'));
 app.use('/', authRoutes);
