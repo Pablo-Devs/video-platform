@@ -1,5 +1,6 @@
 import express from 'express';
-import { uploadVideos, uploadVideosPage } from '../controllers/videosControllers/uploadVideosController.js';
+import { uploadVideos } from '../controllers/videosControllers/uploadVideosController.js';
+import { checkAdmin, requireAuth } from '../middlewares/authMiddlewares.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -21,9 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Admin Video Upload Route
-router.post('/upload-video', upload.single('video'), uploadVideos);
-
-// Admin Video Upload Page Route
-router.get('/upload-videos', uploadVideosPage);
+router.post('/upload-video',requireAuth, checkAdmin, upload.single('video'), uploadVideos);
 
 export default router;

@@ -45,3 +45,33 @@ export const checkUser = async (req, res, next) => {
         next();
     }
 };
+
+export const checkAdmin = async (req, res, next) => {
+    try {
+        // Extract token from cookies
+        const token = req.cookies.token;
+
+        // Check if token exists
+        if (!token) {
+            return res.redirect('/login');
+        }
+
+        // Verify and decode token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Retrieve user information from the decoded token
+        const user = await User.findById(decoded.userId);
+
+        // Check if the user is an admin
+        if (!user || !user.isAdmin) {
+            return res.status(403).json({ message: 'Forbidden. You do not have permission to access this resource.' });
+        }
+
+        // If the user is an admin, move to the next middleware
+        next();
+    } catch (error) {
+        // Handle verification errors
+        console.error('Error checking admin:', error.message);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};

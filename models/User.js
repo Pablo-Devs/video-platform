@@ -11,9 +11,9 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   uploadedVideos: [
     {
-      title: { type: String, required: true },
+      title: { type: String },
       description: { type: String },
-      filePath: { type: String, required: true }
+      filePath: { type: String }
     }
   ]
 });
