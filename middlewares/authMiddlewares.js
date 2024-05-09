@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-export const requireAuth = (req, res, next) => {
+// Middleware to require authentication
+export const requireAuth = async (req, res, next) => {
     try {
         // Extract token from cookies
         const token = req.cookies.token;
@@ -26,28 +27,21 @@ export const requireAuth = (req, res, next) => {
     }
 };
 
+// Middleware to check user authentication and attach user data to response locals
 export const checkUser = async (req, res, next) => {
-    const token = req.cookies.token;
-    if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-            if (err) {
-                console.error('JWT verification error:', err.message);
-                res.locals.user = null;
-                next();
-            } else {
-                try {
-                    let user = await User.findById(decoded.userId);
-                    res.locals.user = user;
-                    next();
-                } catch (error) {
-                    console.error('Error finding user:', error.message);
-                    res.locals.user = null;
-                    next();
-                }
-            }
-        })
-    } else {
+    try {
+        const token = req.cookies.token;
+        if (token) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.userId);
+            res.locals.user = user;
+        } else {
+            res.locals.user = null;
+        }
+        next();
+    } catch (error) {
+        console.error('Error identifying user:', error.message);
         res.locals.user = null;
         next();
     }
-}
+};
