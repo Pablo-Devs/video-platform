@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadVideos } from '../controllers/videosControllers/uploadVideosController.js';
+import { uploadVideos, uploadVideosPage } from '../controllers/videosControllers/uploadVideosController.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -8,7 +8,7 @@ const router = express.Router();
 // Multer storage configuration for handling file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/videos'); // Save uploaded videos to the 'uploads/videos' directory
+    cb(null, 'public/videos'); // Save uploaded videos to the 'public/videos' directory
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -21,6 +21,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Admin Video Upload Route
-router.post('/admin/upload-video', upload.single('video'), uploadVideos);
+router.post('/upload-video', upload.single('video'), uploadVideos);
+
+// Admin Video Upload Page Route
+router.get('/upload-videos', uploadVideosPage);
 
 export default router;

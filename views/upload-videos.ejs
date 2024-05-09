@@ -1,0 +1,40 @@
+<%- include('partials/header'); -%>
+
+<form id="uploadForm" action="/upload-video" method="POST" enctype="multipart/form-data">
+    <h2>Upload Video</h2>
+    <label for="title">Title</label>
+    <input id="title" type="text" name="title" required />
+    <div id="titleError" class="error"></div>
+    <label for="description">Description</label>
+    <textarea name="description" rows="4"></textarea>
+    <label for="video">Select Video</label>
+    <input id="video" type="file" name="video" accept="video/*" required />
+    <div id="videoError" class="error"></div>
+    <button type="submit">Upload Video</button>
+    <div id="submitError" class="error"></div>
+</form>
+
+<%- include('partials/footer'); -%>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        const title = document.getElementById('title').value.trim();
+        const video = document.getElementById('video').value.trim();
+
+        // Validate title
+        if (!title) {
+            document.getElementById('titleError').innerText = 'Please enter a title';
+            event.preventDefault(); // Prevent form submission
+        } else {
+            document.getElementById('titleError').innerText = '';
+        }
+
+        // Validate video file
+        if (!video) {
+            document.getElementById('videoError').innerText = 'Please select a video file';
+            event.preventDefault(); // Prevent form submission
+        } else {
+            document.getElementById('videoError').innerText = '';
+        }
+    });
+</script>

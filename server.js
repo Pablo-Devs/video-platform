@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import fetchVideosRoutes from './routes/fetchVideosRoutes.js'
 import videoUploadRoutes from './routes/videoUploadRoutes.js';
@@ -14,6 +15,10 @@ const app = express();
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// Middleware to parse cookies
+app.use(cookieParser());
+
+// Middleware to serve static files
 app.use(express.static('public'));
 
 // view engine setup

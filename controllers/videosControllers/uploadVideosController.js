@@ -27,3 +27,7 @@ export async function uploadVideos(req, res) {
         res.status(500).json({ message: 'Internal server error' });
       }
     }
+
+    export function uploadVideosPage(req, res) {
+      res.render('upload-videos');
+  }
