@@ -1,15 +1,54 @@
 <%- include('partials/header'); -%>
 
 <header>
-  <div class="home">
-    <img src="/videographer.jpg" alt="">
-  </div>
-  <div class="headings">
-    <h2>Video Streaming Platform</h2>
-    <h3>By Blankson Paul</h3>
-    <a href="/upload-videos" class="btn">Upload a video</a>
-  </div>
+  <h1>Welcome to Video Platform</h1>
 </header>
 
+<main>
+  <div class="video-navigation">
+    <h2>Featured Videos</h2>
+    <div class="video-list" id="videoList">
+      <!-- Videos will be dynamically added here -->
+    </div>
+  </div>
+</main>
 
 <%- include('partials/footer'); -%>
+
+<script>
+  // Function to fetch videos for navigation
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch('/navigate-videos');
+      if (!response.ok) {
+        throw new Error('Error fetching videos');
+      }
+      const data = await response.json();
+      renderVideos(data.videos);
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    }
+  };
+
+  // Function to render videos on the page
+  const renderVideos = (videos) => {
+    const videoList = document.getElementById('videoList');
+    videoList.innerHTML = '';
+    videos.forEach(video => {
+      const videoItem = document.createElement('div');
+      videoItem.classList.add('video-item');
+      videoItem.innerHTML = `
+        <h3>${video.title}</h3>
+        <p>${video.description}</p>
+        <a href="/videos/${video._id}">Watch Now</a>
+      `;
+      videoList.appendChild(videoItem);
+    });
+  };
+
+  // Call fetchVideos function when the page loads
+  window.onload = () => {
+    fetchVideos();
+  };
+</script>

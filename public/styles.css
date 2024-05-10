@@ -79,6 +79,7 @@ button{
   display: block;
   padding: 10px 16px;
   letter-spacing: 2px;
+  cursor: pointer;
 }
 .error{
   color: #ff0099;
@@ -116,4 +117,103 @@ footer{
   text-align: center;
   margin-top: 120px;
   color: #aaa;
+}
+
+/* Styles for the video container */
+.video-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Styles for the video player */
+#video-player {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Styles for the control buttons */
+/* button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+} */
+
+/* Style for the share button */
+#share-btn {
+  background-color: #28a745;
+}
+
+/* Style for hiding the previous button when it's not clickable */
+#previous-btn:disabled {
+  display: none;
+}
+
+/* Style for hiding the next button when it's not clickable */
+#next-btn:disabled {
+  display: none;
+}
+.align {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* CSS for home.ejs */
+
+header {
+  text-align: center;
+  padding: 20px 0;
+  /* background-color: #333; */
+  color: #fff;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.video-navigation {
+  margin-bottom: 50px;
+}
+
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.video-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.video-item h3 {
+  margin-top: 0;
+}
+
+.video-item p {
+  margin-bottom: 10px;
+}
+
+.video-item a {
+  display: block;
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 0;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.video-item a:hover {
+  background-color: #0056b3;
 }

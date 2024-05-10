@@ -1,4 +1,5 @@
 import Video from '../../models/Video.js';
+import mongoose from 'mongoose';
 
 export async function videoNavigation(req, res) {
     try {
@@ -25,6 +26,11 @@ export async function videoNavigation(req, res) {
 export async function getVideoByID(req, res) {
     try {
         const { videoId } = req.params;
+
+        // Validate videoId as a valid ObjectId
+        if (!mongoose.isValidObjectId(videoId)) {
+            return res.status(400).json({ message: 'Invalid video ID' });
+        }
 
         // Find the video by its ID
         const video = await Video.findById(videoId);
