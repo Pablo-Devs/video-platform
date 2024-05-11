@@ -2,18 +2,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bespoke Streaming</title>
+  <title>Leo Streaming</title>
   <link rel="stylesheet" href="/styles.css">
 </head> 
 <body>
-  <nav>
-    <h1><a href="/">Video Streaming Platform</a></h1>
+  <nav class="fixed">
+    <h1 class=""><a href="/">PL Streaming</a></h1>
     <ul>
         <% if (user) { %>
-        <li>Welcome, <%= user.username %> </li>
+        <li class="bg-sky-500">Welcome, <%= user.username %> </li>
         <li><a href="/logout">Log out</a></li>
           <% } else { %>
-        <li><a href="/login">Log in</a></li>
+        <li class=""><a href="/login">Log in</a></li>
         <li><a href="/signup" class="btn">Sign up</a></li>
         <% } %>
     </ul>
