@@ -1,5 +1,8 @@
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
+import { generatePreviewImages } from '../../middlewares/generatePreviewImages.js';
+import fs from 'fs';
+import path from 'path';
 
 export async function uploadVideos(req, res) {
     try {
@@ -20,12 +23,28 @@ export async function uploadVideos(req, res) {
 
         // Create a new video document
         const video = new Video({ title, description, filePath });
+
+        // Generate preview images for the uploaded video
+        const previewImagesPath = await generatePreviewImages(filePath);
+
+        // Save the paths of the preview images in the video document
+        video.previewImages = previewImagesPath;
+
+        // Set the first preview image as the thumbnail
+        if (previewImagesPath.length > 0) {
+            const thumbnailPath = path.join(__dirname, '..', 'public', 'thumbnails', `${video._id}.png`);
+            fs.copyFileSync(previewImagesPath[0], thumbnailPath);
+            video.thumbnail = `/thumbnails/${video._id}.png`;
+        }
+
+        // Save the video document
         await video.save();
 
         // Update admin user document to include the uploaded video
         adminUser.uploadedVideos.push(video._id);
         await adminUser.save();
 
+        // Send response
         res.status(201).json({ message: 'Video uploaded successfully', video });
     } catch (error) {
         console.error(error);
