@@ -1,21 +1,31 @@
 <%- include('partials/header'); -%>
 
-<form id="loginForm">
-    <h2>Login</h2>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required />
-    <div class="email error"></div>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required />
-    <div class="password error"></div>
-    <button type="submit">Login</button>
-</form>
+<body class="bg-gray-100 lg:m-32 m-8">
+  <div class="container mx-auto py-16 px-4 lg:px-8">
+      <div class="flex flex-col items-center gap-8">
+          <h2 class="text-4xl font-semibold text-gray-800 text-center">Login</h2>
+          <form id="loginForm" class="max-w-lg w-full">
+              <div class="mb-4">
+                  <label for="email" class="block text-gray-700 font-medium">Email</label>
+                  <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500" required />
+                  <p class="email error text-red-500 text-sm mt-1"></p>
+              </div>
+              <div class="mb-4">
+                  <label for="password" class="block text-gray-700 font-medium">Password</label>
+                  <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500" required />
+                  <p class="password error text-red-500 text-sm mt-1"></p>
+              </div>
+              <div class="mb-6">
+                  <button type="submit" class="w-full bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:bg-gray-800 transition duration-300">Login</button>
+              </div>
+              <p class="text-gray-700 text-sm text-center">Don't have an account? <a href="/signup" class="text-gray-900 font-medium hover:underline">Signup here</a></p>
+          </form>
+      </div>
+  </div>
+</body>
 
-<%- include('partials/footer'); -%>
-
-  
-  <script>
-document.addEventListener('DOMContentLoaded', () => {
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -55,4 +65,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-  </script>
+</script>

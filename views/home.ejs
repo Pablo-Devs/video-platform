@@ -1,17 +1,44 @@
 <%- include('partials/header'); -%>
 
-<header>
-  <h1>Welcome to Video Platform</h1>
-</header>
+<main class="mb-8">
+  <div class="container mx-auto relative">
+    <!-- Trailer container -->
+    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center relative" style="background-image: url('/videographer.jpg')">
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black opacity-50"></div>
+      <!-- Play Button -->
+      <button class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-16 h-16 flex items-center justify-center text-gray-900 text-xl font-bold shadow-lg hover:bg-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 2a8 8 0 1 0 8 8 8.025 8.025 0 0 0-8-8zm4.018 10.237L8.687 15.276a.5.5 0 0 1-.638-.76L13.04 10l-3.992-4.516a.5.5 0 0 1 .639-.76l5.331 3.039a.5.5 0 0 1 0 .836z" />
+        </svg>
+      </button>
+      <!-- More Info Button -->
+      <button class="absolute bottom-14 transform bg-gray-900 text-white py-2 px-6 ml-4 rounded-full text-lg font-semibold shadow-lg hover:bg-gray-800">More Info</button>
+      <!-- Description Overlay -->
+      <div class="absolute bottom-28 p-4 text-white">
+        <p class="text-sm">This is a short trailer showcasing the highlights of the video.</p>
+      </div>
+    </div>
+  </div>
 
-<main>
-  <div class="video-navigation">
-    <h2>Featured Videos</h2>
-    <div class="video-list" id="videoList">
-      <!-- Videos will be dynamically added here -->
+  <div class="container mx-auto mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Video Cards -->
+      <div class="card relative">
+        <img src="video1_thumbnail.jpg" alt="Video 1" class="w-full h-48 object-cover">
+        <div class="p-4 card-overlay absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-lg font-semibold mb-2">Video 1</h3>
+          <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
+            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">Watch</button>
+            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">Like</button>
+          </div>
+        </div>
+      </div>
+      <!-- Add more video cards here -->
     </div>
   </div>
 </main>
+
 
 <%- include('partials/footer'); -%>
 
@@ -19,9 +46,9 @@
   // Function to fetch videos for navigation
   const fetchVideos = async () => {
     try {
-      const response = await fetch('/navigate-videos');
+      const response = await fetch("/navigate-videos");
       if (!response.ok) {
-        throw new Error('Error fetching videos');
+        throw new Error("Error fetching videos");
       }
       const data = await response.json();
       renderVideos(data.videos);
@@ -33,11 +60,11 @@
 
   // Function to render videos on the page
   const renderVideos = (videos) => {
-    const videoList = document.getElementById('videoList');
-    videoList.innerHTML = '';
-    videos.forEach(video => {
-      const videoItem = document.createElement('div');
-      videoItem.classList.add('video-item');
+    const videoList = document.getElementById("videoList");
+    videoList.innerHTML = "";
+    videos.forEach((video) => {
+      const videoItem = document.createElement("div");
+      videoItem.classList.add("video-item");
       videoItem.innerHTML = `
         <h3>${video.title}</h3>
         <p>${video.description}</p>
