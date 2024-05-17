@@ -2,21 +2,38 @@
 
 <main class="mb-8">
   <div class="container mx-auto relative">
-    <!-- Trailer container -->
-    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center relative" style="background-image: url('/videographer.jpg')">
+    <!-- Video Image banner container -->
+    <div
+      class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center relative"
+      style="background-image: url('/videographer.jpg')"
+    >
       <!-- Overlay -->
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <!-- Play Button -->
-      <button class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-16 h-16 flex items-center justify-center text-gray-900 text-xl font-bold shadow-lg hover:bg-gray-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M10 2a8 8 0 1 0 8 8 8.025 8.025 0 0 0-8-8zm4.018 10.237L8.687 15.276a.5.5 0 0 1-.638-.76L13.04 10l-3.992-4.516a.5.5 0 0 1 .639-.76l5.331 3.039a.5.5 0 0 1 0 .836z" />
+      <button
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-16 h-16 flex items-center justify-center text-gray-900 text-xl font-bold shadow-lg bg-gray-100 hover:bg-gray-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#000000"
+        >
+          <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
         </svg>
       </button>
       <!-- More Info Button -->
-      <button class="absolute bottom-14 transform bg-gray-900 text-white py-2 px-6 ml-4 rounded-full text-lg font-semibold shadow-lg hover:bg-gray-800">More Info</button>
+      <button
+        class="absolute bottom-14 transform bg-gray-900 text-white py-2 px-6 ml-4 rounded-full text-lg font-semibold shadow-lg hover:bg-gray-800"
+      >
+        More Info
+      </button>
       <!-- Description Overlay -->
       <div class="absolute bottom-28 p-4 text-white">
-        <p class="text-sm">This is a short trailer showcasing the highlights of the video.</p>
+        <p class="text-sm">
+          This is a short trailer showcasing the highlights of the video.
+        </p>
       </div>
     </div>
   </div>
@@ -25,12 +42,28 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Video Cards -->
       <div class="card relative">
-        <img src="video1_thumbnail.jpg" alt="Video 1" class="w-full h-48 object-cover">
-        <div class="p-4 card-overlay absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300">
+        <img
+          src="video1_thumbnail.jpg"
+          alt="Video 1"
+          class="w-full h-48 object-cover"
+        />
+        <div
+          class="p-4 card-overlay absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
+        >
           <h3 class="text-lg font-semibold mb-2">Video 1</h3>
-          <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
-            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">Watch</button>
-            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">Like</button>
+          <div
+            class="flex items-center justify-between absolute bottom-5 left-5 right-5"
+          >
+            <button
+              class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800"
+            >
+              Watch
+            </button>
+            <button
+              class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800"
+            >
+              Like
+            </button>
           </div>
         </div>
       </div>
@@ -38,7 +71,6 @@
     </div>
   </div>
 </main>
-
 
 <%- include('partials/footer'); -%>
 
