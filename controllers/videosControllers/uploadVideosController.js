@@ -1,7 +1,6 @@
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
-import { generatePreviewImages } from '../../middlewares/generatePreviewImages.js';
-import fs from 'fs';
+import { generatePreviewImages } from '../../middlewares/generateImages.js';
 import path from 'path';
 
 export async function uploadVideos(req, res) {
@@ -24,30 +23,26 @@ export async function uploadVideos(req, res) {
         // Create a new video document
         const video = new Video({ title, description, filePath });
 
+        // Save the video document to get its ID
+        await video.save();
+
         // Generate preview images for the uploaded video
-        const previewImagesPath = await generatePreviewImages(filePath);
+        const directoryPath = path.dirname(filePath);
+        const previewImages = await generatePreviewImages(filePath, directoryPath, video._id);
 
-        // Save the paths of the preview images in the video document
-        video.previewImages = previewImagesPath;
+        // Update the video document with preview images paths
+        video.previewImages = previewImages;
 
-        // Set the first preview image as the thumbnail
-        if (previewImagesPath.length > 0) {
-            const thumbnailPath = path.join(__dirname, '..', 'public', 'thumbnails', `${video._id}.png`);
-            fs.copyFileSync(previewImagesPath[0], thumbnailPath);
-            video.thumbnail = `/thumbnails/${video._id}.png`;
-        }
-
-        // Save the video document
+        // Save the updated video document
         await video.save();
 
         // Update admin user document to include the uploaded video
         adminUser.uploadedVideos.push(video._id);
         await adminUser.save();
 
-        // Send response
         res.status(201).json({ message: 'Video uploaded successfully', video });
     } catch (error) {
-        console.error(error);
+        console.error('Error uploading video:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

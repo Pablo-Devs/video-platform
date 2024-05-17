@@ -15,7 +15,7 @@ router.get('/videos/:videoId/url', getVideoUrlByID);
 
 router.get('/home', (req, res) => res.render('home'));
 
-router.get('/videos', requireAuth, (req, res) => res.render('videos'));
+router.get('/watch', requireAuth, (req, res) => res.render('videos'));
 
 router.get('/upload-videos', checkAdmin, requireAuth, (req, res) => res.render('upload-videos'));
 
