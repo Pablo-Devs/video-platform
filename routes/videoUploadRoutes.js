@@ -19,12 +19,12 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const dir = 'public/videos';
     ensureDirectoryExistence(dir);
-    cb(null, dir); // Save uploaded videos to the 'public/videos' directory
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const extension = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + extension); // Generate a unique filename for the uploaded video
+    cb(null, file.fieldname + '-' + uniqueSuffix + extension);
   }
 });
 

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/navigate-videos', videoNavigation);
 
 // Route to retrieve a specific video by ID
-router.get('/videos/:videoId', getVideoByID);
+router.get('/api/videos/:videoId', getVideoByID);
 
 // Route to retrieve the URL of a specific video by its ID
 router.get('/videos/:videoId/url', getVideoUrlByID);

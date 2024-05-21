@@ -160,8 +160,14 @@ video {
   flex-grow: 1;
 }
 
-.video-container.captions .captions-btn {
+.video-container.captions .skip-btn {
   border-bottom: 3px solid red;
+}
+
+.skip-btn {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .video-controls-container .controls button.wide-btn {

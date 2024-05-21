@@ -5,6 +5,7 @@ const videoSchema = new mongoose.Schema({
   description: { type: String },
   filePath: { type: String, required: true },
   previewImages: { type: [String], default: [] },
+  thumbnail: { type: String },
   uploadedAt: { type: Date, default: Date.now },
 });
 

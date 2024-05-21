@@ -78,7 +78,7 @@ export async function getVideoUrlByID(req, res) {
         }
 
         // Construct the URL of the video file
-        const videoUrl = `${req.protocol}://${req.get('host')}/public/videos/${path.basename(video.filePath)}`;
+        const videoUrl = `${req.protocol}://${req.get('host')}${video.filePath}`;
 
         res.json({ videoUrl });
     } catch (error) {
