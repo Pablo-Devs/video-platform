@@ -36,6 +36,18 @@ export async function videoNavigation(req, res) {
     }
 }
 
+// Get all videos IDs
+export async function getAllVideosIDs(req, res) {
+    try {
+        const videos = await Video.find({}, '_id');
+        const videoIds = videos.map(video => video._id.toString());
+        res.json({ videoIds });
+    } catch (error) {
+        console.error('Error fetching videos IDs:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 // Get Video Details by ID
 export async function getVideoByID(req, res) {
     try {

@@ -1,11 +1,14 @@
 import express from 'express';
-import { videoNavigation, getVideoByID, getVideoUrlByID } from '../controllers/videosControllers/fetchVideosController.js';
+import { videoNavigation, getVideoByID, getVideoUrlByID, getAllVideosIDs } from '../controllers/videosControllers/fetchVideosController.js';
 import { requireAuth, checkAdmin } from '../middlewares/authMiddlewares.js';
 
 const router = express.Router();
 
 // Route to fetch videos for navigation
 router.get('/navigate-videos', videoNavigation);
+
+// Route to retrieve all video IDs
+router.get('/api/video-ids', getAllVideosIDs);
 
 // Route to retrieve a specific video by ID
 router.get('/api/videos/:videoId', getVideoByID);

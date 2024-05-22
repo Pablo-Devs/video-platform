@@ -1,4 +1,4 @@
-<%- include('partials/header'); -%>
+<%- include('partials/videosHeader'); -%>
 
 <div class="video-center-container">
   <div class="video-container paused" data-volume-level="high">
@@ -51,22 +51,11 @@
           />
         </div>
         <div class="duration-container">
-          <div class="current-time">0:00</div> / <div class="total-time"></div>
+          <div class="current-time">0:00</div>
+          /
+          <div class="total-time"></div>
         </div>
         <div class="skip-btn">
-          <button id="next-btn" aria-label="Next Video">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              fill="currentColor"
-            >
-              <path
-                d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z"
-              />
-            </svg>
-          </button>
           <button id="previous-btn" aria-label="Previous Video">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -80,8 +69,23 @@
               />
             </svg>
           </button>
+          <button id="next-btn" aria-label="Next Video">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="currentColor"
+            >
+              <path
+                d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z"
+              />
+            </svg>
+          </button>
         </div>
-        <button class="speed-btn wide-btn" aria-label="Playback Speed">1x</button>
+        <button class="speed-btn wide-btn" aria-label="Playback Speed">
+          1x
+        </button>
         <button class="mini-player-btn" aria-label="Mini Player">
           <svg viewBox="0 0 24 24">
             <path
@@ -125,287 +129,276 @@
     </video>
   </div>
 </div>
+</body>
+</html>
 
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const videoId = urlParams.get("videoId");
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get("videoId");
 
-  let videos = [];
-  let currentIndex = -1;
+    let videoIds = [];
+    let currentIndex = -1;
 
-  // Fetch the video details if a videoId is provided
-  if (videoId) {
+    // Fetch all video IDs for next and previous buttons
     try {
-      const response = await fetch(`/api/videos/${videoId}`);
+      const response = await fetch("/api/video-ids");
       const data = await response.json();
-
-      if (data && data.video) {
-        const videoElement = document.getElementById("video-player");
-        videoElement.src = data.video.filePath;
-
-        // Populate other video details if needed
-        const thumbnailImg = document.querySelector(".thumbnail-img");
-        thumbnailImg.src = data.video.thumbnail;
-
-        // Update preview images if available
-        const previewImages = data.video.previewImages;
-        if (previewImages && previewImages.length > 0) {
-          const previewImg = document.querySelector(".preview-img");
-          previewImg.src = previewImages[0];
-        }
-      } else {
-        console.error("Video not found");
-      }
+      videoIds = data.videoIds;
+      currentIndex = videoIds.indexOf(videoId);
+      setupNavigation();
+      updateNavigationButtons(); // Initial call to update button visibility
     } catch (error) {
-      console.error("Error fetching video details:", error);
-    }
-  } else {
-    console.error("No videoId found in URL");
-  }
-
-  // Fetch all videos for next and previous buttons
-  try {
-    const response = await fetch("/navigate-videos");
-    const data = await response.json();
-    videos = data.videos;
-    currentIndex = videos.findIndex(video => video._id.$oid === videoId);
-    setupNavigation();
-    updateNavigationButtons(); // Initial call to update button visibility
-  } catch (error) {
-    console.error("Error fetching video navigation:", error);
-  }
-
-  // Video player controls code
-  const Video = document.querySelector("video");
-  const videoContainer = document.querySelector(".video-container");
-  const playPauseBtn = document.querySelector(".play-pause-btn");
-  const theaterBtn = document.querySelector(".theater-btn");
-  const fullScreenBtn = document.querySelector(".full-screen-btn");
-  const miniPlayerBtn = document.querySelector(".mini-player-btn");
-  const muteBtn = document.querySelector(".mute-btn");
-  const speedBtn = document.querySelector(".speed-btn");
-  const currentTimeElem = document.querySelector(".current-time");
-  const totalTimeElem = document.querySelector(".total-time");
-  const volumeSlider = document.querySelector(".volume-slider");
-  const timelineContainer = document.querySelector(".timeline-container");
-
-  document.addEventListener("keydown", (e) => {
-    const tagName = document.activeElement.tagName.toLowerCase();
-
-    if (tagName === "input") return;
-
-    switch (e.key.toLowerCase()) {
-      case " ":
-        if (tagName === "button") return;
-      case "k":
-        togglePlay();
-        break;
-      case "f":
-        toggleFullScreenMode();
-        break;
-      case "t":
-        toggleTheaterMode();
-        break;
-      case "i":
-        toggleMiniPlayerMode();
-        break;
-      case "m":
-        toggleMute();
-        break;
-      case "arrowleft":
-      case "j":
-        skip(-5);
-        break;
-      case "arrowright":
-      case "l":
-        skip(5);
-        break;
-      case "c":
-        toggleCaptions();
-        break;
-    }
-  });
-
-  // Play/Pause Button
-  playPauseBtn.addEventListener("click", togglePlay);
-  Video.addEventListener("click", togglePlay);
-
-  function togglePlay() {
-    Video.paused ? Video.play() : Video.pause();
-  }
-
-  Video.addEventListener("play", () => {
-    videoContainer.classList.remove("paused");
-  });
-
-  Video.addEventListener("pause", () => {
-    videoContainer.classList.add("paused");
-  });
-
-  // Theater Mode Button
-  theaterBtn.addEventListener("click", toggleTheaterMode);
-
-  function toggleTheaterMode() {
-    videoContainer.classList.toggle("theater");
-  }
-
-  // Full Screen Button
-  fullScreenBtn.addEventListener("click", toggleFullScreenMode);
-
-  function toggleFullScreenMode() {
-    if (document.fullscreenElement == null) {
-      videoContainer.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
-  // Mini Player Button
-  miniPlayerBtn.addEventListener("click", toggleMiniPlayerMode);
-
-  function toggleMiniPlayerMode() {
-    if (videoContainer.classList.contains("mini-player")) {
-      document.exitPictureInPicture();
-    } else {
-      Video.requestPictureInPicture();
-    }
-  }
-
-  // Mute Button
-  muteBtn.addEventListener("click", toggleMute);
-
-  function toggleMute() {
-    Video.muted = !Video.muted;
-  }
-
-  Video.addEventListener("volumechange", () => {
-    volumeSlider.value = Video.volume;
-    let volumeLevel;
-    if (Video.muted || Video.volume === 0) {
-      volumeSlider.value = 0;
-      volumeLevel = "muted";
-    } else if (Video.volume >= 0.5) {
-      volumeLevel = "high";
-    } else {
-      volumeLevel = "low";
+      console.error("Error fetching video IDs:", error);
     }
 
-    videoContainer.dataset.volumeLevel = volumeLevel;
-  });
+    // Fetch the video details if a videoId is provided
+    if (videoId) {
+      try {
+        const response = await fetch(`/api/videos/${videoId}`);
+        const data = await response.json();
 
-  // Speed Button
-  speedBtn.addEventListener("click", changePlaybackSpeed);
+        if (data && data.video) {
+          const videoElement = document.getElementById("video-player");
+          videoElement.src = data.video.filePath;
 
-  function changePlaybackSpeed() {
-    let newPlaybackRate = Video.playbackRate + 0.25;
-    if (newPlaybackRate > 2) newPlaybackRate = 0.25;
-    Video.playbackRate = newPlaybackRate;
-    speedBtn.textContent = `${newPlaybackRate}x`;
-  }
+          // Populate other video details if needed
+          const thumbnailImg = document.querySelector(".thumbnail-img");
+          thumbnailImg.src = data.video.thumbnail;
 
-  // Current Time and Total Time
-  Video.addEventListener("loadeddata", () => {
-    totalTimeElem.textContent = formatDuration(Video.duration);
-  });
-
-  Video.addEventListener("timeupdate", () => {
-    currentTimeElem.textContent = formatDuration(Video.currentTime);
-    const percent = Video.currentTime / Video.duration;
-    timelineContainer.style.setProperty("--progress-position", percent);
-  });
-
-  // Volume Slider
-  volumeSlider.addEventListener("input", (e) => {
-    Video.volume = e.target.value;
-    Video.muted = e.target.value === 0;
-  });
-
-  // Functions for formatting duration and skipping
-  const leadingZeroFormatter = new Intl.NumberFormat(undefined, {
-    minimumIntegerDigits: 2,
-  });
-
-  function formatDuration(time) {
-    const seconds = Math.floor(time % 60);
-    const minutes = Math.floor(time / 60) % 60;
-    const hours = Math.floor(time / 3600);
-    if (hours === 0) {
-      return `${minutes}:${leadingZeroFormatter.format(seconds)}`;
-    } else {
-      return `${hours}:${leadingZeroFormatter.format(
-        minutes
-      )}:${leadingZeroFormatter.format(seconds)}`;
-    }
-  }
-
-  function skip(duration) {
-    Video.currentTime += duration;
-  }
-
-  function toggleCaptions() {
-    const captions = Video.textTracks[0];
-    const isHidden = captions.mode === "hidden";
-    captions.mode = isHidden ? "showing" : "hidden";
-    videoContainer.classList.toggle("captions", isHidden);
-  }
-
-  function setupNavigation() {
-    const nextBtn = document.getElementById("next-btn");
-    const prevBtn = document.getElementById("previous-btn");
-
-    nextBtn.addEventListener("click", () => {
-      if (currentIndex < videos.length - 1) {
-        currentIndex++;
-        updateVideo(videos[currentIndex]);
+          // Update preview images if available
+          const previewImages = data.video.previewImages;
+          if (previewImages && previewImages.length > 0) {
+            const previewImg = document.querySelector(".preview-img");
+            previewImg.src = previewImages[0];
+          }
+        } else {
+          console.error("Video not found");
+        }
+      } catch (error) {
+        console.error("Error fetching video details:", error);
       }
-      updateNavigationButtons();
+    } else {
+      console.error("No videoId found in URL");
+    }
+
+    // Video player controls code
+    const Video = document.querySelector("video");
+    const videoContainer = document.querySelector(".video-container");
+    const playPauseBtn = document.querySelector(".play-pause-btn");
+    const theaterBtn = document.querySelector(".theater-btn");
+    const fullScreenBtn = document.querySelector(".full-screen-btn");
+    const miniPlayerBtn = document.querySelector(".mini-player-btn");
+    const muteBtn = document.querySelector(".mute-btn");
+    const speedBtn = document.querySelector(".speed-btn");
+    const currentTimeElem = document.querySelector(".current-time");
+    const totalTimeElem = document.querySelector(".total-time");
+    const volumeSlider = document.querySelector(".volume-slider");
+    const timelineContainer = document.querySelector(".timeline-container");
+
+    document.addEventListener("keydown", (e) => {
+      const tagName = document.activeElement.tagName.toLowerCase();
+
+      if (tagName === "input") return;
+
+      switch (e.key.toLowerCase()) {
+        case " ":
+          if (tagName === "button") return;
+        case "k":
+          togglePlay();
+          break;
+        case "f":
+          toggleFullScreenMode();
+          break;
+        case "t":
+          toggleTheaterMode();
+          break;
+        case "i":
+          toggleMiniPlayerMode();
+          break;
+        case "m":
+          toggleMute();
+          break;
+        case "arrowleft":
+        case "j":
+          skip(-5);
+          break;
+        case "arrowright":
+        case "l":
+          skip(5);
+          break;
+        case "c":
+          toggleCaptions();
+          break;
+      }
     });
 
-    prevBtn.addEventListener("click", () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        updateVideo(videos[currentIndex]);
-      }
-      updateNavigationButtons();
+    // Play/Pause Button
+    playPauseBtn.addEventListener("click", togglePlay);
+    Video.addEventListener("click", togglePlay);
+
+    function togglePlay() {
+      Video.paused ? Video.play() : Video.pause();
+    }
+
+    Video.addEventListener("play", () => {
+      videoContainer.classList.remove("paused");
     });
 
-    // Initial update of button visibility
-    updateNavigationButtons();
-  }
+    Video.addEventListener("pause", () => {
+      videoContainer.classList.add("paused");
+    });
 
-  function updateVideo(video) {
-    const videoElement = document.getElementById("video-player");
-    videoElement.src = video.filePath;
-    window.history.pushState({}, "", `?videoId=${video._id.$oid}`);
+    // Theater Mode Button
+    theaterBtn.addEventListener("click", toggleTheaterMode);
 
-    // Update other video details if needed
-    const thumbnailImg = document.querySelector(".thumbnail-img");
-    thumbnailImg.src = video.thumbnail;
-
-    // Update preview images if available
-    const previewImages = video.previewImages;
-    if (previewImages && previewImages.length > 0) {
-      const previewImg = document.querySelector(".preview-img");
-      previewImg.src = previewImages[0];
-    }
-  }
-
-  function updateNavigationButtons() {
-    const nextBtn = document.getElementById("next-btn");
-    const prevBtn = document.getElementById("previous-btn");
-
-    if (currentIndex >= videos.length - 1) {
-      nextBtn.style.display = "none";
-    } else {
-      nextBtn.style.display = "inline-block";
+    function toggleTheaterMode() {
+      videoContainer.classList.toggle("theater");
     }
 
-    if (currentIndex <= 0) {
-      prevBtn.style.display = "none";
-    } else {
-      prevBtn.style.display = "inline-block";
+    // Full Screen Button
+    fullScreenBtn.addEventListener("click", toggleFullScreenMode);
+
+    function toggleFullScreenMode() {
+      if (document.fullscreenElement == null) {
+        videoContainer.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
     }
-  }
-});
+
+    // Mini Player Button
+    miniPlayerBtn.addEventListener("click", toggleMiniPlayerMode);
+
+    function toggleMiniPlayerMode() {
+      if (videoContainer.classList.contains("mini-player")) {
+        document.exitPictureInPicture();
+      } else {
+        Video.requestPictureInPicture();
+      }
+    }
+
+    // Mute Button
+    muteBtn.addEventListener("click", toggleMute);
+
+    function toggleMute() {
+      Video.muted = !Video.muted;
+    }
+
+    Video.addEventListener("volumechange", () => {
+      volumeSlider.value = Video.volume;
+      let volumeLevel;
+      if (Video.muted || Video.volume === 0) {
+        volumeSlider.value = 0;
+        volumeLevel = "muted";
+      } else if (Video.volume >= 0.5) {
+        volumeLevel = "high";
+      } else {
+        volumeLevel = "low";
+      }
+
+      videoContainer.dataset.volumeLevel = volumeLevel;
+    });
+
+    // Speed Button
+    speedBtn.addEventListener("click", changePlaybackSpeed);
+
+    function changePlaybackSpeed() {
+      let newPlaybackRate = Video.playbackRate + 0.25;
+      if (newPlaybackRate > 2) newPlaybackRate = 0.25;
+      Video.playbackRate = newPlaybackRate;
+      speedBtn.textContent = `${newPlaybackRate}x`;
+    }
+
+    // Current Time and Total Time
+    Video.addEventListener("loadeddata", () => {
+      totalTimeElem.textContent = formatDuration(Video.duration);
+    });
+
+    Video.addEventListener("timeupdate", () => {
+      currentTimeElem.textContent = formatDuration(Video.currentTime);
+      const percent = Video.currentTime / Video.duration;
+      timelineContainer.style.setProperty("--progress-position", percent);
+    });
+
+    // Volume Slider
+    volumeSlider.addEventListener("input", (e) => {
+      Video.volume = e.target.value;
+      Video.muted = e.target.value === 0;
+    });
+
+    // Functions for formatting duration and skipping
+    const leadingZeroFormatter = new Intl.NumberFormat(undefined, {
+      minimumIntegerDigits: 2,
+    });
+
+    function formatDuration(time) {
+      const seconds = Math.floor(time % 60);
+      const minutes = Math.floor(time / 60) % 60;
+      const hours = Math.floor(time / 3600);
+      if (hours === 0) {
+        return `${minutes}:${leadingZeroFormatter.format(seconds)}`;
+      } else {
+        return `${hours}:${leadingZeroFormatter.format(
+          minutes
+        )}:${leadingZeroFormatter.format(seconds)}`;
+      }
+    }
+
+    function skip(duration) {
+      Video.currentTime += duration;
+    }
+
+    function toggleCaptions() {
+      const captions = Video.textTracks[0];
+      const isHidden = captions.mode === "hidden";
+      captions.mode = isHidden ? "showing" : "hidden";
+      videoContainer.classList.toggle("captions", isHidden);
+    }
+
+    function setupNavigation() {
+      const nextBtn = document.getElementById("next-btn");
+      const prevBtn = document.getElementById("previous-btn");
+
+      nextBtn.addEventListener("click", () => {
+        if (currentIndex < videoIds.length - 1) {
+          currentIndex++;
+          navigateToVideo(videoIds[currentIndex]);
+        }
+        updateNavigationButtons();
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          navigateToVideo(videoIds[currentIndex]);
+        }
+        updateNavigationButtons();
+      });
+
+      // Initial update of button visibility
+      updateNavigationButtons();
+    }
+
+    function navigateToVideo(videoId) {
+      window.location.href = `/watch?videoId=${videoId}`;
+    }
+
+    function updateNavigationButtons() {
+      const nextBtn = document.getElementById("next-btn");
+      const prevBtn = document.getElementById("previous-btn");
+
+      if (currentIndex >= videoIds.length - 1) {
+        nextBtn.style.display = "none";
+      } else {
+        nextBtn.style.display = "inline-block";
+      }
+
+      if (currentIndex <= 0) {
+        prevBtn.style.display = "none";
+      } else {
+        prevBtn.style.display = "inline-block";
+      }
+    }
+  });
 </script>
