@@ -1,11 +1,15 @@
 /* google fonts */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
+  background-color: #000000;
+  color: #ffffff;
   margin: 0;
 }
 
@@ -13,7 +17,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Adjust as needed */
+  height: 100vh;
 }
 
 .video-container {
@@ -168,6 +172,13 @@ video {
   display: flex;
   align-items: center;
   gap: 2rem;
+  margin-right: 3%;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
 }
 
 .video-controls-container .controls button.wide-btn {

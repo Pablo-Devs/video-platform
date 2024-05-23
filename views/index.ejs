@@ -1,18 +1,15 @@
 <%- include('partials/header'); -%>
-
-<div class="container mx-auto relative">
-  <!-- Image container -->
-  <div class="bg-cover bg-center h-[400px] lg:h-[500px] flex items-center justify-center" style="background-image: url('/videographer.jpg');">
+  <div class="relative">
+  <div  style="background-image: url(/videographer.jpg)" class="lg:h-[72.8%] h-full w-full bg-cover" alt=""></div>
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <!-- Content -->
-    <div class="text-center text-white z-10 lg:mt-0 mt-20">
-      <h2 class="text-4xl lg:text-6xl font-semibold mb-4">PaulLeo Streaming Platform</h2>
-      <h3 class="text-2xl lg:text-3xl font-semibold mb-8">By Paul Leonard</h3>
-      <a href="/signup" class="bg-yellow-400 rounded-lg py-3 px-6 text-lg lg:text-xl hover:bg-yellow-500 transition duration-300">Get Started</a>
-    </div>
-  </div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-white">Welcome to Leo Streaming</h1>
+        <p class="text-lg text-white">Watch your favorite movies and TV shows</p>
+        <a href="/signup" class="inline-block px-6 py-3 mt-4 text-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 rounded-lg">Get Started</a>
+      </div>
 </div>
-
 
 <%- include('partials/footer'); -%>
