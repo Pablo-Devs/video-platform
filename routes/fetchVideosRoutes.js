@@ -14,9 +14,9 @@ router.get('/api/video-ids', getAllVideosIDs);
 router.get('/api/videos/:videoId', getVideoByID);
 
 // Route to retrieve the URL of a specific video by its ID
-router.get('/videos/:videoId/url', getVideoUrlByID);
+router.get('/video-url/:videoId', getVideoUrlByID);
 
-router.get('/home', (req, res) => res.render('home'));
+router.get('/home',requireAuth, (req, res) => res.render('home'));
 
 router.get('/watch', requireAuth, (req, res) => res.render('videos'));
 

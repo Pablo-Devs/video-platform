@@ -1,29 +1,29 @@
 <%- include('partials/header'); -%>
 
 <main class="mb-8">
-  <div class="container mx-auto relative">
+  <div class="container mx-auto px-4 lg:px-8 relative">
     <!-- Video Image banner container -->
-    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center relative" style="background-image: url('/videographer.jpg')">
+    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative" style="background-image: url('/videographer.jpg')">
       <!-- Overlay -->
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <!-- Play Button -->
-      <button class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-16 h-16 flex items-center justify-center text-gray-900 text-xl font-bold shadow-lg bg-gray-100 hover:bg-gray-200">
+      <button class="relative z-10 rounded-full w-16 h-16 flex items-center justify-center text-gray-900 text-xl font-bold shadow-lg bg-gray-100 hover:bg-gray-200">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
           <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
         </svg>
       </button>
-      <!-- More Info Button -->
-      <button class="absolute bottom-14 transform bg-orange-500 text-white py-2 px-6 ml-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600">
-        More Info
-      </button>
       <!-- Description Overlay -->
-      <div class="absolute bottom-28 p-4 text-white">
-        <p class="text-sm">This is a short trailer showcasing the highlights of the video.</p>
+      <div class="absolute bottom-16 left-0 right-0 px-4 text-white z-10">
+        <p class="text-center text-sm">This is a short trailer showcasing the highlights of the video.</p>
+      </div>
+      <!-- More Info Button -->
+      <div class="absolute bottom-4 w-full flex justify-center z-10">
+        <button class="bg-orange-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600">More Info</button>
       </div>
     </div>
   </div>
 
-  <div class="container mx-auto mt-8">
+  <div class="container mx-auto mt-8 px-4 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
       <!-- Video cards will be injected here by JavaScript -->
     </div>

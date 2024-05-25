@@ -90,7 +90,7 @@ export async function getVideoUrlByID(req, res) {
         }
 
         // Construct the URL of the video file
-        const videoUrl = `${req.protocol}://${req.get('host')}${video.filePath}`;
+        const videoUrl = `${req.protocol}://${req.get('host')}/watch?videoId=${video.videoId}`;
 
         res.json({ videoUrl });
     } catch (error) {
