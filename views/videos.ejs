@@ -42,7 +42,7 @@
             <div class="total-time"></div>
           </div>
           <div class="video-title-container">
-            <h3 class="video-title">This is the title</h3>
+            <h3 id="video-title" class="video-title"></h3>
           </div>
           <div class="skip-btn">
             <button id="previous-btn" aria-label="Previous Video">
@@ -160,33 +160,38 @@
 
       // Fetch the video details if a videoId is provided
       if (videoId) {
-        try {
-          const response = await fetch(`/api/videos/${videoId}`);
-          const data = await response.json();
+    try {
+      const response = await fetch(`/api/videos/${videoId}`);
+      const data = await response.json();
 
-          if (data && data.video) {
-            const videoElement = document.getElementById("video-player");
-            videoElement.src = data.video.filePath;
+      if (data && data.video) {
+        const videoElement = document.getElementById("video-player");
+        videoElement.src = data.video.filePath;
+        const thumbnailImg = document.querySelector(".thumbnail-img");
+        thumbnailImg.src = data.video.thumbnail;
 
-            // Populate other video details if needed
-            const thumbnailImg = document.querySelector(".thumbnail-img");
-            thumbnailImg.src = data.video.thumbnail;
+        // Display the title
+       const videoTitleElement = document.getElementById("video-title");
+       videoTitleElement.textContent = data.video.title;
 
-            // Update preview images if available
-            const previewImages = data.video.previewImages;
-            if (previewImages && previewImages.length > 0) {
-              const previewImg = document.querySelector(".preview-img");
-              previewImg.src = previewImages[0];
-            }
-          } else {
-            console.error("Video not found");
-          }
-        } catch (error) {
-          console.error("Error fetching video details:", error);
+        const previewImages = data.video.previewImages;
+        if (previewImages && previewImages.length > 0) {
+          const timeline = document.querySelector(".timeline");
+          previewImages.forEach((imgSrc, index) => {
+            const img = new Image();
+            img.src = imgSrc;
+            img.classList.add("preview-img");
+            img.dataset.time = index * 10; // Images are for every 10 seconds
+            timeline.appendChild(img);
+          });
         }
-      } else {
-        console.error("No videoId found in URL");
       }
+    } catch (error) {
+      console.error("Error fetching video details:", error);
+    }
+  } else {
+    console.error("No videoId found in URL");
+  }
 
       // Video player controls code
       const Video = document.querySelector("video");
@@ -201,6 +206,8 @@
       const totalTimeElem = document.querySelector(".total-time");
       const volumeSlider = document.querySelector(".volume-slider");
       const timelineContainer = document.querySelector(".timeline-container");
+      const timeline = document.querySelector(".timeline");
+      const thumbIndicator = document.querySelector(".thumb-indicator");
 
       document.addEventListener("keydown", (e) => {
         const tagName = document.activeElement.tagName.toLowerCase();
@@ -317,21 +324,72 @@
       }
 
       // Current Time and Total Time
-      Video.addEventListener("loadeddata", () => {
-        totalTimeElem.textContent = formatDuration(Video.duration);
-      });
+  Video.addEventListener("loadeddata", () => {
+    totalTimeElem.textContent = formatDuration(Video.duration);
+  });
 
-      Video.addEventListener("timeupdate", () => {
-        currentTimeElem.textContent = formatDuration(Video.currentTime);
-        const percent = Video.currentTime / Video.duration;
-        timelineContainer.style.setProperty("--progress-position", percent);
-      });
+  Video.addEventListener("timeupdate", () => {
+    currentTimeElem.textContent = formatDuration(Video.currentTime);
+    const percent = Video.currentTime / Video.duration;
+    timelineContainer.style.setProperty("--progress-position", percent);
+  });
 
-      // Volume Slider
-      volumeSlider.addEventListener("input", (e) => {
-        Video.volume = e.target.value;
-        Video.muted = e.target.value === 0;
-      });
+  // Volume Slider
+  volumeSlider.addEventListener("input", (e) => {
+    Video.volume = e.target.value;
+    Video.muted = e.target.value === 0;
+  });
+
+  // Timeline
+  timelineContainer.addEventListener("mousemove", handleTimelineUpdate);
+  timelineContainer.addEventListener("mousedown", toggleScrubbing);
+  document.addEventListener("mouseup", (e) => {
+    if (isScrubbing) toggleScrubbing(e);
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (isScrubbing) handleTimelineUpdate(e);
+  });
+
+  let isScrubbing = false;
+  let wasPaused = false;
+
+  function handleTimelineUpdate(e) {
+    const rect = timelineContainer.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
+    const previewImg = timelineContainer.querySelector(".preview-img");
+    timelineContainer.style.setProperty("--preview-position", percent);
+
+    if (previewImg) {
+      const videoDuration = Video.duration;
+      const previewIndex = Math.floor((percent * videoDuration) / 10); // Every 10 seconds
+      if (previewImages[previewIndex]) {
+        previewImg.src = previewImages[previewIndex];
+      }
+    }
+
+    if (isScrubbing) {
+      e.preventDefault();
+      timelineContainer.style.setProperty("--progress-position", percent);
+    }
+  }
+
+  function toggleScrubbing(e) {
+    const rect = timelineContainer.getBoundingClientRect();
+    const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
+    isScrubbing = (e.buttons & 1) === 1;
+
+    videoContainer.classList.toggle("scrubbing", isScrubbing);
+
+    if (isScrubbing) {
+      wasPaused = Video.paused;
+      Video.pause();
+    } else {
+      Video.currentTime = percent * Video.duration;
+      if (!wasPaused) Video.play();
+    }
+
+    handleTimelineUpdate(e);
+  }
 
       // Functions for formatting duration and skipping
       const leadingZeroFormatter = new Intl.NumberFormat(undefined, {
