@@ -1,0 +1,351 @@
+<%- include('partials/header'); -%>
+
+    <div class="flex h-screen">
+
+        <!-- Sidebar -->
+        <div class="h-full bg-[#111111] text-white w-52 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out"
+            id="sidebar">
+            <!-- Navigation -->
+            <nav class="absolute  lg:bottom-[40%] md:bottom-[70%] sm:bottom-[50%] bottom-[55%]">
+                <a href="#" id="dashboard-link"
+                    class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white active flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed" class="mr-2">
+                        <path
+                            d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" id="analytics-link"
+                    class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed" class="mr-2">
+                        <path
+                            d="M280-280h80v-280h-80v280Zm160 0h80v-400h-80v400Zm160 0h80v-160h-80v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg>
+                    Analytics
+                </a>
+                <a href="#" id="content-link"
+                    class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed" class="mr-2">
+                        <path
+                            d="m460-380 280-180-280-180v360ZM320-240q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z" />
+                    </svg>
+                    Content
+                </a>
+                <a href="#" id="settings-link"
+                    class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed" class="mr-2">
+                        <path
+                            d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="dashboard-content" class="flex-1 p-4 text-lg font-bold lg:mt-16 md:mt-16 mt-16">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div
+                    class="bg-[#111111] flex flex-col items-center justify-center shadow-lg rounded-lg p-6 border border-gray-700 lg:h-[450px] h-auto">
+                    <img src="/creator1.jpg" alt="Paul Leonard" class="mb-2 w-20 h-20 md:w-28 md:h-28 rounded-full">
+                    <p class="text-gray-400 text-sm mb-4">Want to see metrics on your recent video? Upload and publish a
+                        video to get started.</p>
+                    <button
+                        class="bg-orange-500 text-white py-2 px-4 md:px-6 rounded-sm text-lg font-semibold shadow-lg hover:bg-orange-600 focus:outline-none"
+                        id="upload-button">Upload Video</button>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 lg:h-[400px] h-auto">
+                    <h2 class="text-xl font-bold mb-4">Platform analytics</h2>
+                    <p class="text-gray-300 text-sm mb-2">Current subscribers</p>
+                    <h2 class="text-gray-200 text-2xl font-bold mb-4">1,000</h2>
+                    <hr class="border-b border-gray-700 mb-4">
+                    <p class="text-gray-300 text-[1.2rem]">Summary</p>
+                    <p class="text-gray-400 text-xs mb-4">Last 28 days</p>
+                    <div class="flex justify-between items-center">
+                        <p class="text-gray-300 text-sm mb-2">Views</p>
+                        <h2 class="text-gray-200 text-sm font-bold mb-4">10,000</h2>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-gray-300 text-sm mb-2">Total watch time</p>
+                        <h2 class="text-gray-200 text-sm font-bold mb-4">100,000</h2>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div
+                    class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 lg:h-[450px] h-auto lg:mb-0 md:mb-0 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Creator Insider</h2>
+                    <img src="/creator1.jpg" alt="Video-thumbnail" class="mb-4">
+                    <p class="text-gray-300 text-sm mb-2">This week most watched video</p>
+                    <p class="text-gray-400 text-sm mb-8">Lorem ipsum dolor sit amet consec adipisicing elit. Provident
+                        aspernatur gtiue theawiki.</p>
+                    <a href="/home" class="text-xl text-sky-400">Navigate videos</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Content -->
+        <div id="analytics-content" class="flex-1 p-10 lg:mt-10 md:mt-10 mt-10 hidden">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Overview Section -->
+                <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-2 lg:col-span-3">
+                    <h2 class="text-xl font-bold mb-4 text-white">Channel Overview</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                            <p class="text-gray-400 text-sm">Views</p>
+                            <h2 class="text-gray-200 text-2xl font-bold">10,000</h2>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                            <p class="text-gray-400 text-sm">Watch Time (hours)</p>
+                            <h2 class="text-gray-200 text-2xl font-bold">100,000</h2>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                            <p class="text-gray-400 text-sm">Subscribers</p>
+                            <h2 class="text-gray-200 text-2xl font-bold">1,000</h2>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                            <p class="text-gray-400 text-sm">Total Videos</p>
+                            <h2 class="text-gray-200 text-2xl font-bold">200</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-2">
+                    <h2 class="text-xl font-bold mb-4 text-white">Performance Over Time</h2>
+                    <canvas id="performanceChart" class="w-full"></canvas>
+                </div>
+
+                <!-- Demographics Section -->
+                <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-1 mb-4">
+                    <h2 class="text-xl font-bold mb-4 text-white">Demographics</h2>
+                    <canvas id="demographicsChart" class="w-full"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-content" class="flex-1 p-10 text-lg font-bold lg:mt-16 md:mt-16 mt-10 hidden">
+            <h1 class="text-2xl font-bold mb-6">Content Section</h1>
+            <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Video cards will be appended here -->
+            </div>
+        </div>
+
+        <div id="settings-content" class="flex-1 p-10 text-2xl font-bold lg:mt-16 md:mt-16 mt-10 hidden">
+            <h1>Settings Content</h1>
+        </div>
+
+        <!-- Mobile button -->
+        <div class="md:hidden flex items-center fixed bottom-4 right-4">
+            <button class="text-white bg-orange-700 p-2 rounded-full focus:outline-none" id="mobile-menu-button">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const btn = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+
+        const dashboardLink = document.getElementById('dashboard-link');
+        const analyticsLink = document.getElementById('analytics-link');
+        const contentLink = document.getElementById('content-link');
+        const settingsLink = document.getElementById('settings-link');
+
+        const dashboardContent = document.getElementById('dashboard-content');
+        const analyticsContent = document.getElementById('analytics-content');
+        const contentContent = document.getElementById('content-content');
+        const settingsContent = document.getElementById('settings-content');
+
+        const contents = [dashboardContent, analyticsContent, contentContent, settingsContent];
+        const links = [dashboardLink, analyticsLink, contentLink, settingsLink];
+
+        btn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        dashboardLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateContent(dashboardContent, dashboardLink);
+        });
+
+        analyticsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateContent(analyticsContent, analyticsLink);
+        });
+
+        contentLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateContent(contentContent, contentLink);
+        });
+
+        settingsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateContent(settingsContent, settingsLink);
+        });
+
+        function hideAllContents() {
+            contents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            links.forEach(link => {
+                link.classList.remove('bg-orange-700');
+            });
+        }
+
+        function activateContent(content, link) {
+            hideAllContents();
+            content.classList.remove('hidden');
+            link.classList.add('bg-orange-700');
+        }
+
+        // Default active link and content
+        dashboardContent.classList.remove('hidden');
+        dashboardLink.classList.add('bg-orange-700');
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Performance Chart
+        const ctxPerformance = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctxPerformance, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Views',
+                    data: [3000, 5000, 4000, 6000],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Watch Time (hours)',
+                    data: [1200, 1500, 1000, 1800],
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Demographics Chart
+        const ctxDemographics = document.getElementById('demographicsChart').getContext('2d');
+        const demographicsChart = new Chart(ctxDemographics, {
+            type: 'doughnut',
+            data: {
+                labels: ['Male', 'Female', 'Other'],
+                datasets: [{
+                    label: 'Gender',
+                    data: [60, 35, 5],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+        async function fetchVideos() {
+            try {
+                const response = await fetch("/navigate-videos?page=1&limit=10");
+                const data = await response.json();
+
+                const videoContainer = document.getElementById("video-container");
+                videoContainer.innerHTML = '';  // Clear previous videos
+
+                data.videos.forEach((video) => {
+                    const videoCard = document.createElement("div");
+                    videoCard.classList.add(
+                        "card",
+                        "relative",
+                        "overflow-hidden",
+                        "rounded-lg",
+                        "shadow-lg",
+                        "bg-[#111111]",
+                        "text-white"
+                    );
+                    videoCard.innerHTML = `
+                <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-48 object-cover" />
+                <div class="p-4 card-overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <h3 class="text-lg font-semibold text-white mb-2">${video.title}</h3>
+                    <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
+                        <button class="bg-orange-500 text-white py-1 px-4 rounded hover:bg-orange-600 watch-button" data-id="${video._id}">
+                            Watch
+                        </button>
+                        <button class="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600 delete-button" data-id="${video._id}">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+                    videoContainer.appendChild(videoCard);
+                });
+
+                document.querySelectorAll(".watch-button").forEach((button) => {
+                    button.addEventListener("click", (event) => {
+                        const videoId = event.target.getAttribute("data-id");
+                        window.location.href = `/watch?videoId=${videoId}`;
+                    });
+                });
+
+                document.querySelectorAll(".delete-button").forEach((button) => {
+                    button.addEventListener("click", async (event) => {
+                        const videoId = event.target.getAttribute("data-id");
+                        await deleteVideo(videoId);
+                        fetchVideos();  // Refresh the video list
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching videos:", error);
+            }
+        }
+
+        async function deleteVideo(videoId) {
+            try {
+                const response = await fetch(`/delete-video/${videoId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete the video');
+                }
+
+                console.log('Video deleted successfully');
+            } catch (error) {
+                console.error('Error deleting video:', error);
+            }
+        }
+
+        // Fetch videos when the content section is shown
+        document.getElementById('content-link').addEventListener('click', fetchVideos);
+    </script>
+    </body>
+
+    </html>

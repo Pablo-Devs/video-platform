@@ -20,6 +20,6 @@ router.get('/home',requireAuth, (req, res) => res.render('home'));
 
 router.get('/watch', requireAuth, (req, res) => res.render('videos'));
 
-router.get('/upload-videos', checkAdmin, requireAuth, (req, res) => res.render('upload-videos'));
+router.get('/dashboard', checkAdmin, requireAuth, (req, res) => res.render('dashboard'));
 
 export default router;
