@@ -7,7 +7,7 @@
             id="sidebar">
             <!-- Navigation -->
             <nav class="absolute  lg:bottom-[40%] md:bottom-[70%] sm:bottom-[50%] bottom-[55%]">
-                <a href="#" id="dashboard-link"
+                <a href="#" id="dashboard-link" data-page="dashboard-content"
                     class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white active flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#e8eaed" class="mr-2">
@@ -16,7 +16,7 @@
                     </svg>
                     Dashboard
                 </a>
-                <a href="#" id="analytics-link"
+                <a href="#" id="analytics-link" data-page="analytics-content"
                     class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#e8eaed" class="mr-2">
@@ -25,7 +25,7 @@
                     </svg>
                     Analytics
                 </a>
-                <a href="#" id="content-link"
+                <a href="#" id="content-link" data-page="content-content"
                     class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#e8eaed" class="mr-2">
@@ -34,7 +34,7 @@
                     </svg>
                     Content
                 </a>
-                <a href="#" id="settings-link"
+                <a href="#" id="settings-link" data-page="settings-content"
                     class="block py-2.5 px-4 mb-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#e8eaed" class="mr-2">
@@ -84,7 +84,55 @@
                     <p class="text-gray-300 text-sm mb-2">This week most watched video</p>
                     <p class="text-gray-400 text-sm mb-8">Lorem ipsum dolor sit amet consec adipisicing elit. Provident
                         aspernatur gtiue theawiki.</p>
-                    <a href="/home" class="text-xl text-sky-400">Navigate videos</a>
+                    <a href="#" id="navigate-videos-link" class="text-xl text-sky-400">Navigate videos</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+            <div class="bg-[#111111] p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 class="text-xl font-bold mb-4 text-white">Upload Video</h2>
+                <form id="uploadForm">
+                    <div class="mb-4">
+                        <label for="videoTitle" class="block text-gray-300 mb-2">Title</label>
+                        <input type="text" id="videoTitle" name="title"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="videoDescription" class="block text-gray-300 mb-2">Description</label>
+                        <textarea id="videoDescription" name="description"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full"
+                            required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="videoFile" class="block text-gray-300 mb-2">Video File</label>
+                        <input type="file" id="videoFile" name="video"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full" required>
+                    </div>
+                    <div class="mb-4 hidden" id="progressContainer">
+                        <label class="block text-gray-300 mb-2">Uploading...</label>
+                        <progress id="uploadProgress" value="0" max="100" class="w-full"></progress>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-gray-500 text-white py-2 px-4 rounded mr-2"
+                            id="closeModalButton">Cancel</button>
+                        <button type="submit"
+                            class="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 focus:outline-none"
+                            id="submitUploadButton">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Alert Modal -->
+        <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+            <div class="bg-[#111111] p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 class="text-xl font-bold mb-4 text-white">Alert</h2>
+                <p id="alertMessage" class="text-gray-300 mb-4"></p>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-500 text-white py-2 px-4 rounded"
+                        id="closeAlertButton">Close</button>
                 </div>
             </div>
         </div>
@@ -136,8 +184,47 @@
             </div>
         </div>
 
-        <div id="settings-content" class="flex-1 p-10 text-2xl font-bold lg:mt-16 md:mt-16 mt-10 hidden">
-            <h1>Settings Content</h1>
+        <div id="settings-content" class="flex-1 p-10 text-lg font-bold lg:mt-16 md:mt-16 mt-10 hidden">
+            <h1 class="text-2xl font-bold mb-6">Settings</h1>
+            <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 mb-6">
+                <h2 class="text-xl font-bold mb-4">Account Details</h2>
+                <div id="account-details" class="text-gray-300">
+                    <% if (user) { %>
+                        <div class="flex items-center justify-between">
+                            <p>Username: <%= user.username %>
+                            </p>
+                            <p>Email: <%= user.email %>
+                            </p>
+                        </div>
+                        <% } else { %>
+                            <p class="text-red-500">User details not available.</p>
+                            <% } %>
+                </div>
+            </div>
+            <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4">Reset Password</h2>
+                <div id="password-reset-section">
+                    <form id="otp-request-form">
+                        <label for="email" class="text-gray-300 mb-2">Email:</label>
+                        <input type="email" id="email" name="email"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full mb-4" required>
+                        <button type="submit"
+                            class="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 focus:outline-none">Request
+                            OTP</button>
+                    </form>
+                    <form id="password-reset-form" class="hidden">
+                        <label for="otp" class="text-gray-300 mb-2">OTP:</label>
+                        <input type="text" id="otp" name="otp"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full mb-4" required>
+                        <label for="new-password" class="text-gray-300 mb-2">New Password:</label>
+                        <input type="password" id="new-password" name="new-password"
+                            class="bg-gray-800 text-white border border-gray-600 p-2 rounded w-full mb-4" required>
+                        <button type="submit"
+                            class="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 focus:outline-none">Reset
+                            Password</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Mobile button -->
@@ -209,9 +296,94 @@
             link.classList.add('bg-orange-700');
         }
 
+        document.getElementById('navigate-videos-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            activateContent(contentContent, contentLink);
+            fetchVideos();
+        });
+
         // Default active link and content
         dashboardContent.classList.remove('hidden');
         dashboardLink.classList.add('bg-orange-700');
+
+        // Upload Video
+        const uploadButton = document.getElementById('upload-button');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const uploadForm = document.getElementById('uploadForm');
+        const progressContainer = document.getElementById('progressContainer');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const submitUploadButton = document.getElementById('submitUploadButton');
+
+        uploadButton.addEventListener('click', () => {
+            uploadModal.classList.remove('hidden');
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            resetUploadForm();
+        });
+
+        function resetUploadForm() {
+            uploadModal.classList.add('hidden');
+            uploadForm.reset();
+            progressContainer.classList.add('hidden');
+            uploadProgress.value = 0;
+            submitUploadButton.disabled = false;
+        }
+
+        // Get modal elements
+        const alertModal = document.getElementById('alertModal');
+        const alertMessage = document.getElementById('alertMessage');
+        const closeAlertButton = document.getElementById('closeAlertButton');
+
+        // Function to show alert modal
+        function showAlert(message) {
+            alertMessage.textContent = message;
+            alertModal.classList.remove('hidden');
+        }
+
+        // Function to hide alert modal
+        closeAlertButton.addEventListener('click', () => {
+            alertModal.classList.add('hidden');
+        });
+
+        // Upload Video Function
+        async function uploadVideo() {
+            const formData = new FormData(uploadForm);
+            const xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    uploadProgress.value = percentComplete;
+                }
+            });
+
+            xhr.open('POST', '/upload-video');
+            xhr.send(formData);
+
+            xhr.onload = () => {
+                if (xhr.status === 200 || xhr.status === 201) {
+                    showAlert('Video uploaded successfully');
+                } else {
+                    showAlert('Failed to upload video');
+                }
+                resetUploadForm();
+            };
+
+            xhr.onerror = () => {
+                showAlert('Error uploading video');
+                resetUploadForm();
+            };
+        }
+
+        // Add event listener for form submission
+        uploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            submitUploadButton.disabled = true;
+            progressContainer.classList.remove('hidden');
+            uploadVideo();
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -337,14 +509,72 @@
                     throw new Error('Failed to delete the video');
                 }
 
-                console.log('Video deleted successfully');
+                showAlert('Video deleted successfully');
             } catch (error) {
+                showAlert('Error deleting video');
                 console.error('Error deleting video:', error);
             }
         }
 
         // Fetch videos when the content section is shown
         document.getElementById('content-link').addEventListener('click', fetchVideos);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const otpRequestForm = document.getElementById('otp-request-form');
+            const passwordResetForm = document.getElementById('password-reset-form');
+
+            otpRequestForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const email = event.target.email.value;
+                try {
+                    const response = await fetch('/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.message === 'Password reset OTP sent to your email') {
+                        otpRequestForm.classList.add('hidden');
+                        passwordResetForm.classList.remove('hidden');
+                    } else {
+                        showAlert(data.message || 'Failed to send OTP');
+                    }
+                } catch (error) {
+                    showAlert('Error requesting OTP');
+                }
+            });
+
+            passwordResetForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const email = otpRequestForm.email.value;
+                const otp = event.target.otp.value;
+                const newPassword = event.target['new-password'].value;
+                try {
+                    const response = await fetch('/reset-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, otp, newPassword })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        showAlert('Password reset successfully');
+                        otpRequestForm.reset();
+                        passwordResetForm.reset();
+                        otpRequestForm.classList.remove('hidden');
+                        passwordResetForm.classList.add('hidden');
+                    } else {
+                        showAlert(data.message || 'Failed to reset password');
+                    }
+                } catch (error) {
+                    showAlert('Error resetting password');
+                }
+            });
+
+        });
     </script>
     </body>
 

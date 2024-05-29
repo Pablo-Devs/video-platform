@@ -31,10 +31,11 @@ export async function userLoginPost(req, res) {
         // Set token in a cookie
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // MaxAge is in milliseconds (1 hour)
 
-        res.json({ UserId: user._id, message: 'Login successful'});
+        // Send success response
+        return res.json({ userId: user._id, isAdmin: user.isAdmin, message: 'Login successful' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }
 
@@ -65,10 +66,11 @@ export async function adminLoginPost(req, res) {
         // Set token in a cookie
         res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // MaxAge is in milliseconds (1 hour)
 
-        res.json({ UserId: user._id, message: 'Login successful'});
+        // Send success response
+        return res.json({ userId: user._id, isAdmin: user.isAdmin, message: 'Login successful' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }
 
