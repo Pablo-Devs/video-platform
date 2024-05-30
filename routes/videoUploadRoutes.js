@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadVideos } from '../controllers/videosControllers/uploadVideosController.js';
+import { uploadVideos, deleteVideo } from '../controllers/videosControllers/uploadVideosController.js';
 import { checkAdmin, requireAuth } from '../middlewares/authMiddlewares.js';
 import multer from 'multer';
 import fs from 'fs';
@@ -55,5 +55,7 @@ router.post('/upload-video', requireAuth, checkAdmin, (req, res, next) => {
     next();
   });
 }, uploadVideos);
+
+router.delete('/delete-video/:id', requireAuth, checkAdmin, deleteVideo);
 
 export default router;

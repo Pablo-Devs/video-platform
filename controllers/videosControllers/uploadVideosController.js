@@ -1,7 +1,8 @@
+import fs from 'fs';
+import path from 'path';
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
 import { generatePreviewImages } from '../../middlewares/generateImages.js';
-import path from 'path';
 
 export async function uploadVideos(req, res) {
     try {
@@ -34,6 +35,52 @@ export async function uploadVideos(req, res) {
         res.status(201).json({ message: 'Video uploaded successfully', video });
     } catch (error) {
         console.error('Error uploading video:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export async function deleteVideo(req, res) {
+    try {
+        const userId = req.user.userId;
+        const adminUser = await User.findById(userId);
+
+        if (!adminUser || !adminUser.isAdmin) {
+            return res.status(403).json({ message: 'Unauthorized. Only admin users can delete videos' });
+        }
+
+        const videoId = req.params.id;
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).json({ message: 'Video not found' });
+        }
+
+        // Delete the video file from the server
+        const videoPath = path.resolve(video.filePath);
+        if (fs.existsSync(videoPath)) {
+            fs.unlinkSync(videoPath);
+        }
+
+        // Delete preview images from the server
+        video.previewImages.forEach(imagePath => {
+            const fullPath = path.resolve(imagePath);
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
+            }
+        });
+
+        // Remove the video from the database
+        await Video.findByIdAndDelete(videoId);
+
+        // Remove the video from the admin's uploaded videos list
+        adminUser.uploadedVideos = adminUser.uploadedVideos.filter(
+            id => id.toString() !== videoId
+        );
+        await adminUser.save();
+
+        res.status(200).json({ message: 'Video deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting video:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

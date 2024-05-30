@@ -3,183 +3,32 @@
 <main class="mb-8">
   <div class="container mx-auto px-4 lg:px-8 relative">
     <!-- Video Image banner container -->
-    <div
-      class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative"
-      style="background-image: url('/videographer1.jpg')"
-    >
+    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative"
+      style="background-image: url('/videographer1.jpg')">
       <!-- Overlay -->
-      <div class="absolute inset-0 bg-black opacity-50"></div>
+      <div class="absolute inset-0 bg-black opacity-60 z-10"></div>
       <!-- Description Overlay -->
-      <% if (!user.isAdmin) { %>
-      <div
-        class="absolute inset-0 bottom-[-35%] flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6"
-      >
-        <p class="text-sm sm:text-base lg:text-lg leading-tight">
-          Welcome to <strong>Paul Leonard's Video Platform</strong>, where you
-          can exclusively watch videos branded for our community.
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">
+          Welcome to Paul Leonard's Video Platform
+        </h1>
+        <p class="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+          Exclusively watch videos branded for our community, providing a unique and engaging viewing experience.
         </p>
-        <!-- Play all Button -->
-        <button
-          class="bg-orange-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600"
-        >
-          Watch Videos
-        </button>
       </div>
-      <% } else { %>
-      <div
-        class="absolute inset-0 bottom-[-35%] flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6"
-      >
-        <p class="text-sm sm:text-base lg:text-lg leading-tight">
-          Manage and upload new content for
-          <strong>Paul Leonard's Video Platform</strong> to keep your audience
-          engaged.
-        </p>
-        <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-          <!-- Upload Videos Button -->
-          <button
-            class="bg-orange-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600"
-            id="upload-button"
-          >
-            Upload a Video
-          </button>
-          <!-- Dashboard Button -->
-          <a
-            href="/dashboard"
-            class="bg-gray-400 text-black py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-gray-300"
-            >Go to Dashboard</a
-          >
-        </div>
-      </div>
-      <% } %>
     </div>
   </div>
 
   <div class="container mx-auto mt-8 px-4 lg:px-8">
-    <div
-      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      id="video-container"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
       <!-- Video cards will be injected here by JavaScript -->
     </div>
   </div>
 </main>
 
-<!-- Success Modal -->
-<div
-  id="success-modal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
->
-  <div
-    class="bg-white rounded-lg overflow-hidden shadow-lg max-w-lg w-full mx-4 p-6 text-center"
-  >
-    <p class="text-2xl font-bold text-green-500 mb-4">Success!</p>
-    <p class="text-lg text-gray-700">Video uploaded successfully!</p>
-    <button
-      class="mt-4 bg-green-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-green-600"
-      id="success-close-button"
-    >
-      Close
-    </button>
-  </div>
-</div>
-
-<!-- Error Modal -->
-<div
-  id="error-modal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
->
-  <div
-    class="bg-white rounded-lg overflow-hidden shadow-lg max-w-lg w-full mx-4 p-6 text-center"
-  >
-    <p class="text-2xl font-bold text-red-500 mb-4">Error!</p>
-    <p class="text-lg text-gray-700">Failed to upload video. Please try again.</p>
-    <button
-      class="mt-4 bg-red-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-red-600"
-      id="error-close-button"
-    >
-      Close
-    </button>
-  </div>
-</div>
-
-<!-- Modal -->
-<div
-  id="upload-modal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
->
-  <div
-    class="bg-white rounded-lg overflow-hidden shadow-lg max-w-lg w-full mx-4 p-4"
-  >
-    <div class="flex justify-between items-center pb-3">
-      <p class="text-lg font-bold">Upload a Video</p>
-      <button id="close-modal" class="text-black">&times;</button>
-    </div>
-    <form
-      id="uploadForm"
-      enctype="multipart/form-data"
-    >
-      <div class="mb-4">
-        <label for="title" class="block text-sm font-medium text-gray-700"
-          >Video Title</label
-        >
-        <input
-          id="title"
-          type="text"
-          name="title"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
-          required
-        />
-        <div id="titleError" class="text-red-500"></div>
-      </div>
-      <div class="mb-4">
-        <label for="description" class="block text-sm font-medium text-gray-700"
-          >Video Description</label
-        >
-        <textarea
-          id="description"
-          name="description"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
-          required
-        ></textarea>
-      </div>
-      <div class="mb-4">
-        <label for="video" class="block text-sm font-medium text-gray-700"
-          >Upload Video</label
-        >
-        <input
-          type="file"
-          id="video"
-          name="video"
-          accept="video/*"
-          class="mt-1 block w-full"
-          required
-        />
-        <div id="videoError" class="text-red-500"></div>
-      </div>
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          class="bg-orange-500 text-white py-2 px-6 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600"
-        >
-          Submit
-        </button>
-        <div id="submitError" class="text-red-500"></div>
-      </div>
-    </form>
-  </div>
-</div>
-
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const videoContainer = document.getElementById("video-container");
-    const uploadButton = document.getElementById("upload-button");
-    const uploadModal = document.getElementById("upload-modal");
-    const closeModal = document.getElementById("close-modal");
-    const successModal = document.getElementById("success-modal");
-    const errorModal = document.getElementById("error-modal");
-    const successCloseButton = document.getElementById("success-close-button");
-    const errorCloseButton = document.getElementById("error-close-button");
-    const submitButton = document.querySelector("#uploadForm button[type='submit']");
 
     try {
       const response = await fetch("/navigate-videos?page=1&limit=10");
@@ -195,19 +44,19 @@
           "shadow-lg"
         );
         videoCard.innerHTML = `
-          <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-48 object-cover" />
-          <div class="p-4 card-overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-            <h3 class="text-lg font-semibold text-white mb-2">${video.title}</h3>
-            <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
-              <button class="bg-orange-500 text-white py-1 px-4 rounded hover:bg-orange-600 watch-button" data-id="${video._id}">
-                Watch
-              </button>
-              <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">
-                Like
-              </button>
-            </div>
+        <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-48 object-cover" />
+        <div class="p-4 card-overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-lg font-semibold text-white mb-2">${video.title}</h3>
+          <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
+            <button class="bg-orange-500 text-white py-1 px-4 rounded hover:bg-orange-600 watch-button" data-id="${video._id}">
+              Watch
+            </button>
+            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">
+              Like
+            </button>
           </div>
-        `;
+        </div>
+      `;
         videoContainer.appendChild(videoCard);
       });
 
@@ -217,98 +66,10 @@
           window.location.href = `/watch?videoId=${videoId}`;
         });
       });
-
-      if (uploadButton) {
-        uploadButton.addEventListener("click", () => {
-          uploadModal.classList.remove("hidden");
-        });
-
-        closeModal.addEventListener("click", () => {
-          uploadModal.classList.add("hidden");
-        });
-      }
-
-      successCloseButton.addEventListener("click", () => {
-        successModal.classList.add("hidden");
-      });
-
-      errorCloseButton.addEventListener("click", () => {
-        errorModal.classList.add("hidden");
-      });
     } catch (error) {
       console.error("Error fetching videos:", error);
     }
 
-    document
-      .getElementById("uploadForm")
-      .addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const title = document.getElementById("title").value.trim();
-        const video = document.getElementById("video").value.trim();
-
-        // Validate title
-        if (!title) {
-          document.getElementById("titleError").innerText =
-            "Please enter a title";
-          return;
-        } else {
-          document.getElementById("titleError").innerText = "";
-        }
-
-        // Validate video file
-        if (!video) {
-          document.getElementById("videoError").innerText =
-            "Please select a video file";
-          return;
-        } else {
-          document.getElementById("videoError").innerText = "";
-        }
-
-        // Disable submit button
-        submitButton.disabled = true;
-        submitButton.innerText = "Uploading...";
-
-        // Get form data
-        const formData = new FormData(this);
-
-        try {
-          // Make POST request to upload video
-          const response = await fetch("/upload-video", {
-            method: "POST",
-            body: formData,
-          });
-
-          // Enable submit button
-          submitButton.disabled = false;
-          submitButton.innerText = "Submit";
-
-          // Check response status
-          if (response.ok) {
-            // Show success modal if video uploaded successfully
-            successModal.classList.remove("hidden");
-            setTimeout(() => {
-              successModal.classList.add("hidden");
-            }, 3000);
-            uploadModal.classList.add("hidden");
-          } else {
-            // Show error modal if video upload failed
-            errorModal.classList.remove("hidden");
-            setTimeout(() => {
-              errorModal.classList.add("hidden");
-            }, 3000);
-          }
-        } catch (error) {
-          console.error("Error uploading video:", error);
-          // Enable submit button
-          submitButton.disabled = false;
-          submitButton.innerText = "Submit";
-          // Show error modal if there's an error during upload
-          errorModal.classList.remove("hidden");
-          setTimeout(() => {
-            errorModal.classList.add("hidden");
-          }, 3000);
-        }
-      });
   });
 </script>
 

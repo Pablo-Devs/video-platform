@@ -21,10 +21,7 @@ router.get('/logout', logout);
 router.get('/signup', signupPage);
 
 // Forgot Password Page
-router.get('/forgot-password', forgotPasswordPage);
-
-// Reset Password Page
-router.get('/reset-password/', resetPasswordPage);
+router.get('/settings', forgotPasswordPage);
 
 // User Signup Post
 router.post('/signup', userSignupPost);

@@ -126,7 +126,7 @@
         </div>
 
         <!-- Alert Modal -->
-        <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-10">
             <div class="bg-[#111111] p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-xl font-bold mb-4 text-white">Alert</h2>
                 <p id="alertMessage" class="text-gray-300 mb-4"></p>
@@ -181,6 +181,17 @@
             <h1 class="text-2xl font-bold mb-6">Content Section</h1>
             <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Video cards will be appended here -->
+            </div>
+        </div>
+
+        <!-- Progress Modal -->
+        <div id="progress-modal"
+            class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+            <div class="bg-[#111111] p-6 rounded-lg shadow-lg">
+                <div class="flex items-center space-x-2">
+                    <div class="loader border-t-4 border-b-4 border-orange-500 w-8 h-8 rounded-full animate-spin"></div>
+                    <span>Deleting video...</span>
+                </div>
             </div>
         </div>
 
@@ -490,7 +501,15 @@
                 document.querySelectorAll(".delete-button").forEach((button) => {
                     button.addEventListener("click", async (event) => {
                         const videoId = event.target.getAttribute("data-id");
+                        const deleteButton = event.target;
+
+                        deleteButton.disabled = true;
+                        showProgressModal();
+
                         await deleteVideo(videoId);
+
+                        deleteButton.disabled = false;
+                        hideProgressModal();
                         fetchVideos();  // Refresh the video list
                     });
                 });
@@ -514,6 +533,14 @@
                 showAlert('Error deleting video');
                 console.error('Error deleting video:', error);
             }
+        }
+
+        function showProgressModal() {
+            document.getElementById('progress-modal').classList.remove('hidden');
+        }
+
+        function hideProgressModal() {
+            document.getElementById('progress-modal').classList.add('hidden');
         }
 
         // Fetch videos when the content section is shown
