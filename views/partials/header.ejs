@@ -57,6 +57,18 @@
                 <ul
                     class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-300 md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-[#111111] md:bg-transparent">
                     <% if (user) { %>
+                        <li>
+                            <% if (!user.isAdmin) { %>
+                            <a class="block py-2 px-3 text-xl rounded md:border-0 text-white md:p-0"
+                                href="/home">Home</a>
+                            <% } %>
+                            <a href="#" class="lg:hidden md:hidden block px-4 py-2 text-xl text-gray-300">Welcome, <%=
+                                    user.username %>
+                            </a>
+                            <a class="lg:hidden md:hidden block py-2 px-3 text-xl rounded md:border-0 text-white md:p-0"
+                                href="/settings">Settings</a>
+                        </li>
+
                         <li class="block py-2 px-3 text-xl rounded md:border-0 text-white md:p-0 hidden md:block">
                             <button id="user-icon" class="flex items-center space-x-2 text-white focus:outline-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -76,15 +88,7 @@
                                 <a href="/logout" class="block px-4 py-2 text-sm text-gray-300">Log out</a>
                             </div>
                         </li>
-                        <li>
-                            <a href="#" class="lg:hidden md:hidden block px-4 py-2 text-xl text-gray-300">Welcome, <%=
-                                    user.username %>
-                            </a>
-                            <a class="lg:hidden md:hidden block py-2 px-3 text-xl rounded md:border-0 text-white md:p-0"
-                                href="/settings">Settings</a>
-                            <a class="block py-2 px-3 text-xl rounded md:border-0 text-white md:p-0"
-                                href="/logout">Logout</a>
-                        </li>
+                        
                         <% } else { %>
                             <li>
                                 <a href="/login"

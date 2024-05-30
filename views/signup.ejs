@@ -1,6 +1,6 @@
 <%- include('partials/videosHeader'); -%>
 
-<div class="relative flex min-h-full flex-1 flex-col justify-center px-6 py-9 lg:px-8 bg-gray-900">
+<div class="relative flex min-h-full flex-1 flex-col justify-center px-6 py-9 lg:px-8">
   <div class="absolute inset-0 bg-black opacity-50"></div>
   <div class="relative sm:mx-auto sm:w-full sm:max-w-sm bg-white p-8 rounded-lg shadow-lg">
     <div class="mt-5 text-center">
@@ -72,7 +72,7 @@
       const password = form.password.value;
 
       try {
-        const response = await fetch("/admin-signup", {
+        const response = await fetch("/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

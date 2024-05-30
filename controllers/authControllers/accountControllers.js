@@ -61,6 +61,12 @@ export async function passwordResetRequest(req, res) {
     try {
         const { email } = req.body;
 
+        // Check if user exists
+        const user = await User.findOne ({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Account does not exist' });
+        }
+
         // Generate OTP
         const otp = generateOTP();
 
@@ -76,11 +82,11 @@ export async function passwordResetRequest(req, res) {
         // Send OTP via email
         const mailOptions = {
             from: {
-                name: 'Bespoke Video Platform',
+                name: 'Paul Leonard Video Platform',
                 address: process.env.EMAIL_USER
             },
             to: email,
-            subject: 'Bespoke Video Platform Password Reset OTP',
+            subject: 'Paul Leonard Video Platform Password Reset OTP',
             text: `Your OTP for password reset is: ${otp}`
         };
 

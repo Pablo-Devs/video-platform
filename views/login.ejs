@@ -3,70 +3,80 @@
 <div class="relative flex min-h-full flex-1 flex-col justify-center px-6 py-9 lg:px-8">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="relative sm:mx-auto sm:w-full sm:max-w-sm bg-white p-8 rounded-lg shadow-lg">
-      <div class="mt-5 text-center">
-        <h1 class="text-4xl font-bold text-gray-900">PaulLeo</h1>
-      </div>
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Sign in to your account
-      </h2>
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form id="loginForm" class="space-y-6">
-          <div>
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
-              Email
-            </label>
-            <div class="mt-2">
-              <input type="email" id="email" name="email" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" required />
-              <p class="email error text-red-500 text-sm mt-1"></p>
-            </div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
-                Password
-              </label>
-              <div class="text-sm">
-                <a href="/settings" class="font-semibold text-orange-500 hover:text-orange-600">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            <div class="mt-2">
-              <input type="password" id="password" name="password" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" required />
-              <p class="password error text-red-500 text-sm mt-1"></p>
-            </div>
-          </div>
-          <div class="mt-5 mb-6">
-            <button type="submit" class="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">Login</button>
-          </div>
-          <p class="text-gray-700 text-sm text-center">Don't have an account? <a href="/signup" class="text-gray-900 font-medium hover:underline">Signup here</a></p>
-        </form>
-        <p class="my-5 text-center text-gray-900">or continue with</p>
-        <div class="my-4 flex flex-col sm:flex-row justify-between gap-5 items-center">
-          <button class="w-full sm:w-[200px] flex justify-center items-center gap-2 font-semibold text-gray-900 text-lg border border-gray-300 p-2">
-            <img src="/icons/google.png" alt="Google" class="w-[30px]" />
-            Google
-          </button>
-          <button class="w-full sm:w-[200px] flex justify-center items-center gap-2 font-semibold text-gray-900 text-lg border border-gray-300 p-2">
-            <img src="/icons/github.png" alt="Github" class="w-[30px]" />
-            Github
-          </button>
+        <div class="mt-5 text-center">
+            <h1 class="text-4xl font-bold text-gray-900">PaulLeo</h1>
         </div>
-      </div>
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Sign in to your account
+        </h2>
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                        Email
+                    </label>
+                    <div class="mt-2">
+                        <input type="email" id="email" name="email" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" required />
+                        <p class="email error text-red-500 text-sm mt-1"></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
+                            Password
+                        </label>
+                        <div class="text-sm">
+                            <a href="/settings" class="font-semibold text-orange-500 hover:text-orange-600">
+                                Forgot password?
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input type="password" id="password" name="password" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" required />
+                        <p class="password error text-red-500 text-sm mt-1"></p>
+                    </div>
+                </div>
+                <div class="mt-5 mb-6 relative">
+                    <button type="submit" id="loginButton" class="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">
+                        Login
+                    </button>
+                    <div id="spinner" class="loader border-t-4 border-b-4 border-gray-100 w-8 h-8 rounded-full animate-spin hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                </div>
+                <p class="text-gray-700 text-sm text-center">Don't have an account? <a href="/signup" class="text-gray-900 font-medium hover:underline">Signup here</a></p>
+            </form>
+            <p class="my-5 text-center text-gray-900">or continue with</p>
+            <div class="my-4 flex flex-col sm:flex-row justify-between gap-5 items-center">
+                <button class="w-full sm:w-[200px] flex justify-center items-center gap-2 font-semibold text-gray-900 text-lg border border-gray-300 p-2">
+                    <img src="/icons/google.png" alt="Google" class="w-[30px]" />
+                    Google
+                </button>
+                <button class="w-full sm:w-[200px] flex justify-center items-center gap-2 font-semibold text-gray-900 text-lg border border-gray-300 p-2">
+                    <img src="/icons/github.png" alt="Github" class="w-[30px]" />
+                    Github
+                </button>
+            </div>
+        </div>
     </div>
-  </div>   
+</div>   
 </body>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = form.email.value;
-        const password = form.password.value;
+        const form = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+        const spinner = document.getElementById('spinner');
 
-        try {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = form.email.value;
+            const password = form.password.value;
+            
+            // Disable button and show spinner
+            loginButton.disabled = true;
+            spinner.classList.remove('hidden');
+
+            try {
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
@@ -86,21 +96,25 @@
                 } else {
                     window.location.href = '/home';
                 }
-        } catch (error) {
-            console.error(error);
-            const emailError = document.querySelector('.email.error');
-            const passwordError = document.querySelector('.password.error');
-            emailError.textContent = '';
-            passwordError.textContent = '';
-            if (error.message.includes('email')) {
-                emailError.textContent = error.message;
-            } else if (error.message.includes('password')) {
-                passwordError.textContent = error.message;
-            } else {
-                alert('An error occurred. Please try again later.');
+            } catch (error) {
+                console.error(error);
+                const emailError = document.querySelector('.email.error');
+                const passwordError = document.querySelector('.password.error');
+                emailError.textContent = '';
+                passwordError.textContent = '';
+                if (error.message.includes('email')) {
+                    emailError.textContent = error.message;
+                } else if (error.message.includes('password')) {
+                    passwordError.textContent = error.message;
+                } else {
+                    alert('An error occurred. Please try again later.');
+                }
+            } finally {
+                // Enable button and hide spinner
+                loginButton.disabled = false;
+                spinner.classList.add('hidden');
             }
-        }
+        });
     });
-});
 </script>
 </html>

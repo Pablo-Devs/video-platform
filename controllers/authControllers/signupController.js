@@ -54,12 +54,12 @@ export async function userSignupPost(req, res) {
         // Send verification email
         const mailOptions = {
             from: {
-                name: 'Bespoke Video Platform',
+                name: 'Paul Leonard Video Platform',
                 address: process.env.EMAIL_USER
             },
             to: email,
-            subject: 'Bespoke Video Platform Account Verification',
-            text: `Click the following link to verify your account: ${process.env.CLIENT_URL}/verify/${verificationToken}`
+            subject: 'Paul Leonard Video Platform Account Verification',
+            text: `Click the following link to verify your account: ${req.protocol}://${req.get('host')}/verify/${verificationToken}`
         };
 
         await transporter.sendMail(mailOptions);
@@ -103,11 +103,11 @@ export async function adminSignupPost(req, res) {
         // Send verification email
         const mailOptions = {
             from: {
-                name: 'Bespoke Video Platform',
+                name: 'Paul Leonard Video Platform',
                 address: process.env.EMAIL_USER
             },
             to: email,
-            subject: 'Bespoke Video Platform Account Verification',
+            subject: 'Paul Leonard Video Platform Account Verification',
             text: `Click the following link to verify your account: ${process.env.CLIENT_URL}/verify/${verificationToken}`
         };
 
