@@ -144,31 +144,31 @@
                 <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-2 lg:col-span-3">
                     <h2 class="text-xl font-bold mb-4 text-white">Channel Overview</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center views">
                             <p class="text-gray-400 text-sm">Views</p>
-                            <h2 class="text-gray-200 text-2xl font-bold">10,000</h2>
+                            <h2 class="text-gray-200 text-2xl font-bold">0</h2>
                         </div>
-                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center watch-time">
                             <p class="text-gray-400 text-sm">Watch Time (hours)</p>
-                            <h2 class="text-gray-200 text-2xl font-bold">100,000</h2>
+                            <h2 class="text-gray-200 text-2xl font-bold">0</h2>
                         </div>
-                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center subscribers">
                             <p class="text-gray-400 text-sm">Subscribers</p>
-                            <h2 class="text-gray-200 text-2xl font-bold">1,000</h2>
+                            <h2 class="text-gray-200 text-2xl font-bold">0</h2>
                         </div>
-                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center">
+                        <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center total-videos">
                             <p class="text-gray-400 text-sm">Total Videos</p>
-                            <h2 class="text-gray-200 text-2xl font-bold">200</h2>
+                            <h2 class="text-gray-200 text-2xl font-bold">0</h2>
                         </div>
                     </div>
                 </div>
-
+        
                 <!-- Chart Section -->
                 <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-2">
                     <h2 class="text-xl font-bold mb-4 text-white">Performance Over Time</h2>
                     <canvas id="performanceChart" class="w-full"></canvas>
                 </div>
-
+        
                 <!-- Demographics Section -->
                 <div class="bg-[#111111] shadow-lg rounded-lg p-6 border border-gray-700 col-span-1 mb-4">
                     <h2 class="text-xl font-bold mb-4 text-white">Demographics</h2>
@@ -399,62 +399,83 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Performance Chart
-        const ctxPerformance = document.getElementById('performanceChart').getContext('2d');
-        const performanceChart = new Chart(ctxPerformance, {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Views',
-                    data: [3000, 5000, 4000, 6000],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }, {
-                    label: 'Watch Time (hours)',
-                    data: [1200, 1500, 1000, 1800],
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+        document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            // Fetch overview data
+            const overviewResponse = await fetch('/analytics/overview');
+            const overviewData = await overviewResponse.json();
+
+            document.querySelector("#analytics-content .views h2").textContent = overviewData.views;
+            document.querySelector("#analytics-content .watch-time h2").textContent = overviewData.watchTime;
+            document.querySelector("#analytics-content .subscribers h2").textContent = overviewData.subscribers;
+            document.querySelector("#analytics-content .total-videos h2").textContent = overviewData.totalVideos;
+
+            // Fetch performance data
+            const performanceResponse = await fetch('/analytics/performance');
+            const performanceData = await performanceResponse.json();
+
+            const ctxPerformance = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctxPerformance, {
+                type: 'line',
+                data: {
+                    labels: performanceData.labels,
+                    datasets: [{
+                        label: 'Views',
+                        data: performanceData.datasets.views,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Watch Time (hours)',
+                        data: performanceData.datasets.watchTime,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // Demographics Chart
-        const ctxDemographics = document.getElementById('demographicsChart').getContext('2d');
-        const demographicsChart = new Chart(ctxDemographics, {
-            type: 'doughnut',
-            data: {
-                labels: ['Male', 'Female', 'Other'],
-                datasets: [{
-                    label: 'Gender',
-                    data: [60, 35, 5],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
+            // Fetch demographics data
+            const demographicsResponse = await fetch('/analytics/demographics');
+            const demographicsData = await demographicsResponse.json();
+
+            const ctxDemographics = document.getElementById('demographicsChart').getContext('2d');
+            new Chart(ctxDemographics, {
+                type: 'doughnut',
+                data: {
+                    labels: demographicsData.labels,
+                    datasets: [{
+                        label: 'Analytics',
+                        data: demographicsData.datasets,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching analytics data:', error);
+        }
+    });
         async function fetchVideos() {
             try {
                 const response = await fetch("/navigate-videos?page=1&limit=10");

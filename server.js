@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import fetchVideosRoutes from './routes/fetchVideosRoutes.js';
 import videoUploadRoutes from './routes/videoUploadRoutes.js';
+import videoAnalyticsRoutes from './routes/videoAnalyticsRoutes.js';
 import { checkUser } from './middlewares/authMiddlewares.js';
 
 // Load environment variables from .env file
@@ -45,6 +46,7 @@ app.get('/', (req, res) => res.render('index'));
 app.use('/', authRoutes);
 app.use('/', fetchVideosRoutes);
 app.use('/', videoUploadRoutes);
+app.use('/', videoAnalyticsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

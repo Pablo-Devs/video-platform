@@ -185,6 +185,38 @@
             timeline.appendChild(img);
           });
         }
+
+        // Increment view count when the video starts playing
+        videoElement.addEventListener("play", () => {
+          fetch(`/log-view/${videoId}`, {
+            method: "POST",
+          }).catch(error => console.error("Error logging view:", error));
+        });
+
+        // Track watch time
+      const watchTimeInterval = 10000; // 10 seconds
+      let watchTime = 0;
+
+      const sendWatchTime = () => {
+        fetch(`/log-watch-time/${videoId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ watchTime }),
+        }).catch(error => console.error("Error logging watch time:", error));
+      };
+
+      const updateWatchTime = () => {
+        if (!Video.paused && !Video.ended) {
+          watchTime += 10;
+          sendWatchTime();
+        }
+      };
+
+      // Set interval to update watch time every 10 seconds
+      setInterval(updateWatchTime, watchTimeInterval);
+        
       }
     } catch (error) {
       console.error("Error fetching video details:", error);
