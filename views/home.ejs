@@ -1,76 +1,32 @@
 <%- include('partials/header'); -%>
 
-<main class="mb-8">
-  <div class="container mx-auto px-4 lg:px-8 relative">
-    <!-- Video Image banner container -->
-    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative"
-      style="background-image: url('/videographer1.jpg')">
-      <!-- Overlay -->
-      <div class="absolute inset-0 bg-black opacity-60 z-10"></div>
-      <!-- Description Overlay -->
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6">
-        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">
-          Welcome to Paul Leonard's Video Platform
-        </h1>
-        <p class="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-          Exclusively watch videos branded for our community, providing a unique and engaging viewing experience.
-        </p>
+  <main class="mb-8">
+    <div class="container mx-auto px-4 lg:px-8 relative">
+      <!-- Video Image banner container -->
+      <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative"
+        style="background-image: url('/videographer1.jpg')">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black opacity-60 z-10"></div>
+        <!-- Description Overlay -->
+        <div
+          class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">
+            Welcome to Paul Leonard's Video Platform
+          </h1>
+          <p class="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+            Exclusively watch videos branded for our community, providing a unique and engaging viewing experience.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="container mx-auto mt-8 px-4 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
-      <!-- Video cards will be injected here by JavaScript -->
+    <div class="container mx-auto mt-8 px-4 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
+        <!-- Video cards will be injected here by JavaScript -->
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const videoContainer = document.getElementById("video-container");
+  <script src="/scripts/home.js"></script>
 
-    try {
-      const response = await fetch("/navigate-videos?page=1&limit=10");
-      const data = await response.json();
-
-      data.videos.forEach((video) => {
-        const videoCard = document.createElement("div");
-        videoCard.classList.add(
-          "card",
-          "relative",
-          "overflow-hidden",
-          "rounded-lg",
-          "shadow-lg"
-        );
-        videoCard.innerHTML = `
-        <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-48 object-cover" />
-        <div class="p-4 card-overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-          <h3 class="text-lg font-semibold text-white mb-2">${video.title}</h3>
-          <div class="flex items-center justify-between absolute bottom-5 left-5 right-5">
-            <button class="bg-orange-500 text-white py-1 px-4 rounded hover:bg-orange-600 watch-button" data-id="${video._id}">
-              Watch
-            </button>
-            <button class="bg-gray-900 text-white py-1 px-4 rounded hover:bg-gray-800">
-              Like
-            </button>
-          </div>
-        </div>
-      `;
-        videoContainer.appendChild(videoCard);
-      });
-
-      document.querySelectorAll(".watch-button").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const videoId = event.target.getAttribute("data-id");
-          window.location.href = `/watch?videoId=${videoId}`;
-        });
-      });
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-    }
-
-  });
-</script>
-
-<%- include('partials/footer'); -%>
+  <%- include('partials/footer'); -%>

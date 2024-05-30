@@ -123,3 +123,7 @@ export async function adminSignupPost(req, res) {
 export function signupPage(req, res) {
     res.render('signup');
 }
+
+export function adminSignupPage(req, res) {
+    res.render('admin-signup');
+}

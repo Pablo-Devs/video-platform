@@ -2,7 +2,7 @@ import express from 'express';
 import { userLoginPost, adminLoginPost, loginPage } from '../controllers/authControllers/loginController.js';
 import { tokenVerification } from '../controllers/authControllers/accountControllers.js';
 import { passwordResetRequest, resetPassword, forgotPasswordPage, resetPasswordPage } from '../controllers/authControllers/accountControllers.js';
-import { userSignupPost, adminSignupPost, signupPage } from '../controllers/authControllers/signupController.js';
+import { userSignupPost, adminSignupPost, signupPage, adminSignupPage } from '../controllers/authControllers/signupController.js';
 import { logout } from '../controllers/authControllers/logoutController.js';
 
 // Load environment variables from .env file
@@ -17,8 +17,11 @@ router.get('/login', loginPage);
 // Logout Page
 router.get('/logout', logout);
 
-// Signup Page
+// User signup Page
 router.get('/signup', signupPage);
+
+// Admin signup Page
+router.get('/admin-signup', adminSignupPage);
 
 // Forgot Password Page
 router.get('/settings', forgotPasswordPage);
