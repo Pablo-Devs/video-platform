@@ -129,3 +129,17 @@ export const getDemographicData = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch demographics data' });
     }
 }
+
+export const getMostWatchedVideo = async (req, res) => {
+    try {
+        const mostWatchedVideo = await Video.findOne().sort({ views: -1 });
+
+        res.json({
+            thumbnail: mostWatchedVideo.thumbnail,
+            title: mostWatchedVideo.title,
+            description: mostWatchedVideo.description
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch most-watched video data' });
+    }
+};
