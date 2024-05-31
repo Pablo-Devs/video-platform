@@ -50,7 +50,7 @@ export async function tokenVerification(req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.redirect(`${process.env.CLIENT_URL}/login`);
+        res.redirect(`${req.protocol}://${req.get('host')}/login`);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

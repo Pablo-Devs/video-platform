@@ -108,7 +108,7 @@ export async function adminSignupPost(req, res) {
             },
             to: email,
             subject: 'Paul Leonard Video Platform Account Verification',
-            text: `Click the following link to verify your account: ${process.env.CLIENT_URL}/verify/${verificationToken}`
+            text: `Click the following link to verify your account: ${req.protocol}://${req.get('host')}/verify/${verificationToken}`
         };
 
         await transporter.sendMail(mailOptions);
