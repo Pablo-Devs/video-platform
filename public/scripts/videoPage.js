@@ -372,11 +372,11 @@ function toggleScrubbing(e) {
     // Open Share Modal
     shareBtn.addEventListener("click", () => {
       shareLinkInput.value = videoPageUrl;
-      whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(videoPageUrl)}`;
-      facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoPageUrl)}`;
-      twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(videoPageUrl)}`;
-      linkedinShare.href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(videoPageUrl)}`;
-      emailShare.href = `mailto:?subject=Check%20this%20video&body=${encodeURIComponent(videoPageUrl)}`;
+      whatsappShare.href = `https://api.whatsapp.com/send?text=${videoPageUrl}`;
+      facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${videoPageUrl}`;
+      twitterShare.href = `https://twitter.com/intent/tweet?url=${videoPageUrl}`;
+      linkedinShare.href = `https://www.linkedin.com/shareArticle?mini=true&url=${videoPageUrl}`;
+      emailShare.href = `mailto:?subject=Check%20this%20video&body=${videoPageUrl}`;
       shareModal.style.display = "block";
     });
 
