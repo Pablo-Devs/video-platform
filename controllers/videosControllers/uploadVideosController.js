@@ -55,26 +55,39 @@ export async function deleteVideo(req, res) {
             return res.status(404).json({ message: 'Video not found' });
         }
 
-        // Delete the video file from the server
-        const videoPath = path.resolve(video.filePath);
+        // Resolve absolute path for the video file
+        const videoPath = path.resolve('public', `.${video.filePath}`);
         if (fs.existsSync(videoPath)) {
             fs.unlinkSync(videoPath);
+            // console.log(`Deleted video file: ${videoPath}`);
+        } else {
+            console.warn(`Video file not found: ${videoPath}`);
         }
 
-        // Delete preview images from the server
+        // Resolve absolute paths for preview images and delete them
         video.previewImages.forEach(imagePath => {
-            const fullPath = path.resolve(imagePath);
+            const fullPath = path.resolve('public', `.${imagePath}`);
             if (fs.existsSync(fullPath)) {
                 fs.unlinkSync(fullPath);
+                // console.log(`Deleted preview image: ${fullPath}`);
+            } else {
+                console.warn(`Preview image not found: ${fullPath}`);
             }
         });
+
+        // Remove the folder containing preview images
+        const folderName = `preview-${video._id}`;
+        const folderPath = path.resolve(path.join('public', folderName));
+        if (fs.existsSync(folderPath)) {
+            fs.rmSync(folderPath, { recursive: true });
+        }
 
         // Remove the video from the database
         await Video.findByIdAndDelete(videoId);
 
         // Remove the video from the admin's uploaded videos list
         adminUser.uploadedVideos = adminUser.uploadedVideos.filter(
-            id => id.toString() !== videoId
+            idObj => idObj._id.toString() !== videoId
         );
         await adminUser.save();
 
