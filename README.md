@@ -101,6 +101,7 @@ video-platform/
 ├── package.json           # Project metadata and dependencies
 ├── README.md              # Project documentation
 └── server.js              # Main entry point of the application
+```
 
 ## Contributing
 
@@ -121,6 +122,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Contact
 
 For any inquiries or feedback, please contact Paul Blankson (AKA: Pablo-Devs).
+
      ```sh
      https://github.com/Pablo-Devs/
      ```
