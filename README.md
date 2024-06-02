@@ -122,7 +122,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Contact
 
 For any inquiries or feedback, please contact Paul Blankson (AKA: Pablo-Devs).
-
      ```sh
      https://github.com/Pablo-Devs/
      ```
