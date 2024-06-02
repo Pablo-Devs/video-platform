@@ -17,29 +17,41 @@ This project aims to develop a bespoke video platform for content creator Paul L
 - **Navigation Buttons**: Contains next and previous buttons to navigate between videos. These buttons hide if no further videos are available.
 - **Control Buttons**: Common video control buttons for user interaction.
 - **Sharing**: Share button for users to share the video link.
-- **Deployed Link**: https://paul-leonard-video-platform.onrender.com
+- **Deployed Link**: Find the deployed link below
+    ```sh
+    https://paul-leonard-video-platform.onrender.com
+    ```
 
 ## Installation
 
 1. Clone the repository:
-   ```sh
-   git clone https://github.com/Pablo-Devs/video-platform.git
+    ```sh
+    git clone https://github.com/Pablo-Devs/video-platform.git
+    ```
 
 2. Navigate to the project directory:
-   - cd video-platform
-   
+    ```sh
+    cd video-platform
+    ```
+
 3. Install the dependencies:
-    - npm install
+    ```sh
+    npm install
+    ```
 
 ## Usage 
 
-1. npm start
+1. Start the application:
+    ```sh
+    npm start
+    ```
 
-2. Open your browser and go to http://localhost:3000
-    - You can change the port based on you preferrence
+2. Open your browser and go to `http://localhost:3000`
+    - You can change the port based on your preference.
 
 ## Project Structure
 
+```plaintext
 video-platform/
 ├── controllers/
 │   ├── authControllers/
@@ -109,6 +121,12 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Contact
 
 For any inquiries or feedback, please contact Paul Blankson (AKA: Pablo-Devs).
+     ```sh
+     https://github.com/Pablo-Devs/
+     ```
+     ```sh
+     https://www.instagram.com/pablo_devs/
+     ```
 
 
 
