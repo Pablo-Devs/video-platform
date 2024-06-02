@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (error.message.includes("password")) {
         passwordError.textContent = error.message;
       } else {
-        showAlert("An error occurred. Please try again later.");
+        showAlert(error.message);
       }
     } finally {
       // Enable button and hide spinner
