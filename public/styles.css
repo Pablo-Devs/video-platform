@@ -431,3 +431,17 @@ body {
     margin-left: 10px;
   }
 }
+
+/* Index Page */
+
+/* Default background image for small screens */
+.background-image {
+  background-image: url('/videographer.jpg');
+}
+
+/* Background image for large screens */
+@media (min-width: 1024px) {
+  .background-image {
+    background-image: url('/videographer1.jpg');
+  }
+}
