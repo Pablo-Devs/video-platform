@@ -1,32 +1,49 @@
 <%- include('partials/header'); -%>
 
-  <main class="mb-8">
-    <div class="container mx-auto px-4 lg:px-8 relative">
-      <!-- Video Image banner container -->
-      <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative"
-        style="background-image: url('/videographer1.jpg')">
-        <!-- Overlay -->
-        <div class="absolute inset-0 bg-black opacity-60 z-10"></div>
-        <!-- Description Overlay -->
-        <div
-          class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6">
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">
-            Welcome to Paul Leonard's Video Platform
-          </h1>
-          <p class="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-            Exclusively watch videos branded for our community, providing a unique and engaging viewing experience.
-          </p>
-        </div>
+<main class="mb-8 mt-[4.5rem]">
+  <div class="container mx-auto px-4 lg:px-8 relative mt-12">
+    <!-- Video Image banner container -->
+    <div class="bg-cover bg-center h-[400px] lg:h-[450px] flex items-center justify-center relative" style="background-image: url('/videographer1.jpg')">
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black opacity-60 z-10"></div>
+      <!-- Description Overlay -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 text-white z-10 space-y-4 sm:space-y-6">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">
+          Explore Our Video Collection
+        </h1>
+        <p class="text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+          Browse through our collection of videos below. Click on any video card to start watching and enjoy our unique and engaging content tailored for our community.
+        </p>
       </div>
     </div>
+  </div>
 
-    <div class="container mx-auto mt-8 px-4 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
-        <!-- Video cards will be injected here by JavaScript -->
-      </div>
+  <div class="container mx-auto mt-8 px-4 lg:px-8">
+    <!-- Section Title -->
+    <h2 class="text-xl sm:text-2xl lg:text-3xl text-center font-semibold mb-4">Explore Our Videos</h2>
+    <!-- Video Cards Container -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="video-container">
+      <!-- Video cards will be injected here by JavaScript -->
     </div>
-  </main>
+  </div>
+</main>
 
-  <script src="/scripts/home.js"></script>
+<!-- Modal for More Info -->
+<div id="infoModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+  <div class="bg-black bg-opacity-50 absolute inset-0"></div>
+  <div class="bg-[#111111] rounded-lg overflow-hidden shadow-lg z-20 max-w-md w-full mx-4 sm:mx-0 sm:max-w-sm md:max-w-md lg:max-w-sm">
+    <div class="p-4">
+      <img id="modal-thumbnail" src="" alt="" class="w-full h-48 object-cover rounded mb-4 cursor-pointer" />
+      <h2 id="modal-title" class="text-xl font-semibold mb-2"></h2>
+      <p id="modal-description" class="text-base leading-relaxed mb-4"></p>
+      <div class="flex items-center justify-between">
+      <button id="watchButton" class="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600">Watch</button>
+      <button id="closeModal" class="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-950">Close</button>
+     </div>
+    </div>
+  </div>
+</div>
 
-  <%- include('partials/footer'); -%>
+<script src="/scripts/home.js"></script>
+
+<%- include('partials/footer'); -%>
