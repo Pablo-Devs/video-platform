@@ -1,8 +1,6 @@
 
 // User signup 
 document.addEventListener("DOMContentLoaded", () => {
-  const spinner = document.getElementById('spinner');
-  const signupButton = document.getElementById('signupButton');
 
   // Alert modal elements
   const alertModal = document.getElementById('alertModal');
@@ -35,10 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    // Disable button and show spinner
-    signupButton.disabled = true;
-    spinner.classList.remove('hidden');
-
     try {
       const response = await fetch("/admin-signup", {
         method: "POST",
@@ -57,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAlert("Please verify your email to complete the signup process. Check your email for the verification link.");
       setTimeout(() => {
         window.location.href = "/login";
-      }, 5000);
+      }, 7000);
       // window.location.href = "/login";
     } catch (error) {
       console.error(error);
@@ -76,10 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         showAlert("An error occurred. Please try again later.");
       }
-    } finally {
-      // Enable button and hide spinner
-      signupButton.disabled = false;
-      spinner.classList.add('hidden');
     }
   });
 });

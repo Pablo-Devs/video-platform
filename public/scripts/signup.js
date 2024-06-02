@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAlert("Please verify your email to complete the signup process. Check your email for the verification link.");
       setTimeout(() => {
         window.location.href = "/login";
-      }, 5000);
+      }, 9000);
       // window.location.href = "/login";
     } catch (error) {
       console.error(error);
