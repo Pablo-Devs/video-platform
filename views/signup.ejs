@@ -46,7 +46,11 @@
           </div>
           <div class="mt-5 mb-6">
             <button type="submit"
+              id="signupButton"
               class="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">Signup</button>
+            <div id="spinner"
+              class="loader border-t-4 border-b-4 border-gray-100 w-8 h-8 rounded-full animate-spin hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            </div>
           </div>
           <p class="text-gray-700 text-sm text-center">
             Already have an account?
@@ -69,6 +73,18 @@
       </div>
     </div>
   </div>
+
+  <!-- Alert Modal -->
+  <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-10">
+    <div class="bg-[#111111] p-6 rounded-lg shadow-lg w-full max-w-md">
+      <h2 class="text-xl font-bold mb-4 text-white">Notice</h2>
+      <p id="alertMessage" class="text-gray-300 mb-4"></p>
+      <div class="flex justify-end">
+        <button type="button" class="bg-gray-500 text-white py-2 px-4 rounded" id="closeAlertButton">Close</button>
+      </div>
+    </div>
+  </div>
+
   </body>
   <script src="/scripts/signup.js"></script>
 

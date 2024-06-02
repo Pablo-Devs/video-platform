@@ -127,6 +127,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   const timeline = document.querySelector(".timeline");
   const thumbIndicator = document.querySelector(".thumb-indicator");
 
+  // Get the spinner element
+  const bufferingSpinner = document.getElementById('buffering-spinner');
+
+  // Show the spinner when the video is buffering
+  Video.addEventListener('waiting', () => {
+    bufferingSpinner.style.display = 'block';
+  });
+
+  // Hide the spinner when the video can play
+  Video.addEventListener('playing', () => {
+    bufferingSpinner.style.display = 'none';
+  });
+
+  // Hide the spinner once the video has loaded enough data to play through
+  Video.addEventListener('canplaythrough', () => {
+    bufferingSpinner.style.display = 'none';
+  });
+
+  // Optionally, hide the spinner when the video is paused (to cover all cases)
+  Video.addEventListener('pause', () => {
+    bufferingSpinner.style.display = 'none';
+  });
+
+  // Ensure the spinner is hidden if there's an error
+  Video.addEventListener('error', () => {
+    bufferingSpinner.style.display = 'none';
+  });
+
   document.addEventListener("keydown", (e) => {
     const tagName = document.activeElement.tagName.toLowerCase();
 
