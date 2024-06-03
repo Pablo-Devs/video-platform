@@ -2,6 +2,8 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
 import { generatePreviewImages } from '../../middlewares/generateImages.js';
+import fs from 'fs';
+import path from 'path';
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION,
@@ -23,31 +25,52 @@ export async function uploadVideos(req, res) {
         const { title, description } = req.body;
         const file = req.file;
 
-        if (!file || !file.mimetype.startsWith('video/')) {
-            return res.status(400).json({ message: 'Invalid file format. Only video files are allowed' });
-        }
+        const videoKey = `videos/${Date.now()}_${file.originalname}`;
 
-        const params = {
+        const uploadParams = {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: `videos/${Date.now()}_${file.originalname}`,
+            Key: videoKey,
             Body: file.buffer,
             ContentType: file.mimetype,
         };
 
-        const command = new PutObjectCommand(params);
-        const uploadResult = await s3Client.send(command);
+        await s3Client.send(new PutObjectCommand(uploadParams));
 
-        const videoFilePath = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
-        const video = new Video({ title, description, filePath: videoFilePath });
+        const videoUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${videoKey}`;
+
+        const video = new Video({
+            title,
+            description,
+            filePath: videoUrl
+        });
 
         await video.save();
 
-        // Generate preview images from the video buffer
-        const previewImages = await generatePreviewImages(file.buffer, video._id);
+        const previewImages = await generatePreviewImages(videoUrl, video._id);
 
-        video.previewImages = previewImages;
-        if (previewImages.length > 0) {
-            video.thumbnail = previewImages[2];
+        // Upload preview images to S3
+        const previewImageUrls = [];
+        for (const previewImagePath of previewImages) {
+            const imageBuffer = fs.readFileSync(previewImagePath);
+            const imageKey = `previews/${video._id}/${path.basename(previewImagePath)}`;
+
+            const imageUploadParams = {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: imageKey,
+                Body: imageBuffer,
+                ContentType: 'image/png'
+            };
+
+            await s3Client.send(new PutObjectCommand(imageUploadParams));
+            previewImageUrls.push(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${imageKey}`);
+        }
+
+        // Clean up local preview images
+        previewImages.forEach(imagePath => fs.unlinkSync(imagePath));
+
+        video.previewImages = previewImageUrls;
+        if (previewImageUrls.length > 0) {
+            video.thumbnail = previewImageUrls[2]; // Set the third preview image as the thumbnail
         }
         await video.save();
 
@@ -56,10 +79,11 @@ export async function uploadVideos(req, res) {
 
         res.status(201).json({ message: 'Video uploaded successfully', video });
     } catch (error) {
-        console.error('Error uploading video:', error.message);
+        console.error('Error uploading video:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 export async function deleteVideo(req, res) {
     try {

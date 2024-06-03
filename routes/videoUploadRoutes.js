@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import path from 'path'; // Import the path module
 import { uploadVideos, deleteVideo } from '../controllers/videosControllers/uploadVideosController.js';
 import { checkAdmin, requireAuth } from '../middlewares/authMiddlewares.js';
 
