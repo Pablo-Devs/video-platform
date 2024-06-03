@@ -1,20 +1,37 @@
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 import ffprobeStatic from 'ffprobe-static';
-import fs from 'fs';
-import path from 'path';
+import { PassThrough } from 'stream';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 ffmpeg.setFfmpegPath(ffmpegStatic);
 ffmpeg.setFfprobePath(ffprobeStatic.path);
 
-export async function generatePreviewImages(videoPath, videoId) {
-    return new Promise((resolve, reject) => {
-        const previewDir = path.join('public', `preview-${videoId}`);
-        if (!fs.existsSync(previewDir)) {
-            fs.mkdirSync(previewDir, { recursive: true });
-        }
+const s3Client = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
 
-        ffmpeg.ffprobe(videoPath, (err, metadata) => {
+async function uploadToS3(buffer, bucket, key) {
+    const params = {
+        Bucket: bucket,
+        Key: key,
+        Body: buffer,
+        ContentType: 'image/png',
+    };
+    const command = new PutObjectCommand(params);
+    await s3Client.send(command);
+}
+
+export async function generatePreviewImages(videoBuffer, videoId) {
+    return new Promise((resolve, reject) => {
+        const passThroughStream = new PassThrough();
+        passThroughStream.end(videoBuffer);
+
+        ffmpeg.ffprobe(passThroughStream, (err, metadata) => {
             if (err) {
                 return reject(err);
             }
@@ -28,23 +45,35 @@ export async function generatePreviewImages(videoPath, videoId) {
             }
 
             const previewImages = [];
+            const folderKey = `previews/${videoId}`;
 
-            ffmpeg(videoPath)
+            ffmpeg(passThroughStream)
                 .on('filenames', (filenames) => {
                     filenames.forEach((filename) => {
-                        previewImages.push(`/preview-${videoId}/${filename}`);
+                        previewImages.push(`${folderKey}/${filename}`);
                     });
                 })
-                .on('end', () => {
-                    resolve(previewImages);
+                .on('end', async () => {
+                    try {
+                        for (const image of previewImages) {
+                            const imagePath = path.join('/tmp', image);
+                            const imageBuffer = fs.readFileSync(imagePath);
+                            await uploadToS3(imageBuffer, process.env.AWS_BUCKET_NAME, image);
+                            fs.unlinkSync(imagePath); // Cleanup local file
+                        }
+                        const s3PreviewImages = previewImages.map(image => `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${image}`);
+                        resolve(s3PreviewImages);
+                    } catch (uploadError) {
+                        reject(uploadError);
+                    }
                 })
                 .on('error', (err) => {
                     reject(err);
                 })
                 .screenshots({
                     timemarks: timemarks.length > 0 ? timemarks : ['0'],
-                    folder: previewDir,
-                    filename: `image.png`,
+                    folder: '/tmp',
+                    filename: `image-${Date.now()}.png`,
                     size: '192x?'
                 });
         });

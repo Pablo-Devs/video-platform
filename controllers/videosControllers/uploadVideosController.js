@@ -1,8 +1,15 @@
-import fs from 'fs';
-import path from 'path';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
 import { generatePreviewImages } from '../../middlewares/generateImages.js';
+
+const s3Client = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
 
 export async function uploadVideos(req, res) {
     try {
@@ -14,18 +21,33 @@ export async function uploadVideos(req, res) {
         }
 
         const { title, description } = req.body;
-        const filePath = req.file.path;
-        const fileUrl = `/videos/${req.file.filename}`; // Construct the URL for the video
+        const file = req.file;
 
-        const video = new Video({ title, description, filePath: fileUrl });
+        if (!file || !file.mimetype.startsWith('video/')) {
+            return res.status(400).json({ message: 'Invalid file format. Only video files are allowed' });
+        }
+
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: `videos/${Date.now()}_${file.originalname}`,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+        };
+
+        const command = new PutObjectCommand(params);
+        const uploadResult = await s3Client.send(command);
+
+        const videoFilePath = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
+        const video = new Video({ title, description, filePath: videoFilePath });
 
         await video.save();
 
-        const previewImages = await generatePreviewImages(filePath, video._id);
+        // Generate preview images from the video buffer
+        const previewImages = await generatePreviewImages(file.buffer, video._id);
 
         video.previewImages = previewImages;
         if (previewImages.length > 0) {
-            video.thumbnail = previewImages[2]; // Set the third preview image as the thumbnail
+            video.thumbnail = previewImages[2];
         }
         await video.save();
 
@@ -34,7 +56,7 @@ export async function uploadVideos(req, res) {
 
         res.status(201).json({ message: 'Video uploaded successfully', video });
     } catch (error) {
-        console.error('Error uploading video:', error);
+        console.error('Error uploading video:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -55,39 +77,24 @@ export async function deleteVideo(req, res) {
             return res.status(404).json({ message: 'Video not found' });
         }
 
-        // Resolve absolute path for the video file
-        const videoPath = path.resolve('public', `.${video.filePath}`);
-        if (fs.existsSync(videoPath)) {
-            fs.unlinkSync(videoPath);
-            // console.log(`Deleted video file: ${videoPath}`);
-        } else {
-            console.warn(`Video file not found: ${videoPath}`);
+        // Extract video key from the URL
+        const videoKey = video.filePath.split('.com/')[1];
+        const videoParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: videoKey };
+        await s3Client.send(new DeleteObjectCommand(videoParams));
+
+        // Delete preview images from S3
+        for (const imagePath of video.previewImages) {
+            const imageKey = imagePath.split('.com/')[1];
+            const imageParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: imageKey };
+            await s3Client.send(new DeleteObjectCommand(imageParams));
         }
 
-        // Resolve absolute paths for preview images and delete them
-        video.previewImages.forEach(imagePath => {
-            const fullPath = path.resolve('public', `.${imagePath}`);
-            if (fs.existsSync(fullPath)) {
-                fs.unlinkSync(fullPath);
-                // console.log(`Deleted preview image: ${fullPath}`);
-            } else {
-                console.warn(`Preview image not found: ${fullPath}`);
-            }
-        });
-
-        // Remove the folder containing preview images
-        const folderName = `preview-${video._id}`;
-        const folderPath = path.resolve(path.join('public', folderName));
-        if (fs.existsSync(folderPath)) {
-            fs.rmSync(folderPath, { recursive: true });
-        }
-
-        // Remove the video from the database
+        // Remove video document from database
         await Video.findByIdAndDelete(videoId);
 
-        // Remove the video from the admin's uploaded videos list
+        // Remove the video ID from the admin user's uploadedVideos array
         adminUser.uploadedVideos = adminUser.uploadedVideos.filter(
-            idObj => idObj._id.toString() !== videoId
+            idObj => idObj.toString() !== videoId
         );
         await adminUser.save();
 
