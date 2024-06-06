@@ -2,9 +2,10 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client
 import Video from '../../models/Video.js';
 import User from '../../models/User.js';
 import { generatePreviewImages } from '../../middlewares/generateImages.js';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
+// Initialize S3 client with credentials and region from environment variables
 const s3Client = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
@@ -13,11 +14,38 @@ const s3Client = new S3Client({
     },
 });
 
+// Function to upload an object to S3
+async function uploadToS3(params) {
+    try {
+        await s3Client.send(new PutObjectCommand(params));
+    } catch (error) {
+        console.error('Error uploading to S3:', error);
+        throw new Error('Error uploading to S3');
+    }
+}
+
+// Function to delete an object from S3
+async function deleteFromS3(params) {
+    try {
+        await s3Client.send(new DeleteObjectCommand(params));
+    } catch (error) {
+        console.error('Error deleting from S3:', error);
+        throw new Error('Error deleting from S3');
+    }
+}
+
+// Function to construct S3 URL based on bucket name, region, and object key
+function getS3Url(bucketName, region, key) {
+    return `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
+}
+
+// Function to handle video uploads
 export async function uploadVideos(req, res) {
     try {
         const userId = req.user.userId;
         const adminUser = await User.findById(userId);
 
+        // Check if the user is an admin
         if (!adminUser || !adminUser.isAdmin) {
             return res.status(403).json({ message: 'Unauthorized. Only admin users can upload videos' });
         }
@@ -25,8 +53,8 @@ export async function uploadVideos(req, res) {
         const { title, description } = req.body;
         const file = req.file;
 
+        // Construct the S3 key for the video
         const videoKey = `videos/${Date.now()}_${file.originalname}`;
-
         const uploadParams = {
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: videoKey,
@@ -34,46 +62,52 @@ export async function uploadVideos(req, res) {
             ContentType: file.mimetype,
         };
 
-        await s3Client.send(new PutObjectCommand(uploadParams));
+        // Upload the video to S3
+        await uploadToS3(uploadParams);
 
-        const videoUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${videoKey}`;
+        // Construct the video URL
+        const videoUrl = getS3Url(process.env.AWS_BUCKET_NAME, process.env.AWS_REGION, videoKey);
 
+        // Create a new video document in the database
         const video = new Video({
             title,
             description,
-            filePath: videoUrl
+            filePath: videoUrl,
         });
 
         await video.save();
 
+        // Generate preview images for the video
         const previewImages = await generatePreviewImages(videoUrl, video._id);
 
-        // Upload preview images to S3
-        const previewImageUrls = [];
-        for (const previewImagePath of previewImages) {
-            const imageBuffer = fs.readFileSync(previewImagePath);
+        // Upload preview images to S3 and get their URLs
+        const previewImageUploadPromises = previewImages.map(async (previewImagePath) => {
+            const imageBuffer = await fs.readFile(previewImagePath);
             const imageKey = `previews/${video._id}/${path.basename(previewImagePath)}`;
-
             const imageUploadParams = {
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: imageKey,
                 Body: imageBuffer,
-                ContentType: 'image/png'
+                ContentType: 'image/png',
             };
 
-            await s3Client.send(new PutObjectCommand(imageUploadParams));
-            previewImageUrls.push(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${imageKey}`);
-        }
+            await uploadToS3(imageUploadParams);
+            return getS3Url(process.env.AWS_BUCKET_NAME, process.env.AWS_REGION, imageKey);
+        });
 
-        // Clean up local preview images
-        previewImages.forEach(imagePath => fs.unlinkSync(imagePath));
+        const previewImageUrls = await Promise.all(previewImageUploadPromises);
 
+        // Delete local preview images after upload
+        await Promise.all(previewImages.map(imagePath => fs.unlink(imagePath)));
+
+        // Update the video document with preview images URLs and thumbnail
         video.previewImages = previewImageUrls;
         if (previewImageUrls.length > 0) {
             video.thumbnail = previewImageUrls[2]; // Set the third preview image as the thumbnail
         }
         await video.save();
 
+        // Update the admin user's uploaded videos
         adminUser.uploadedVideos.push(video._id);
         await adminUser.save();
 
@@ -84,12 +118,13 @@ export async function uploadVideos(req, res) {
     }
 }
 
-
+// Function to handle video deletion
 export async function deleteVideo(req, res) {
     try {
         const userId = req.user.userId;
         const adminUser = await User.findById(userId);
 
+        // Check if the user is an admin
         if (!adminUser || !adminUser.isAdmin) {
             return res.status(403).json({ message: 'Unauthorized. Only admin users can delete videos' });
         }
@@ -101,22 +136,22 @@ export async function deleteVideo(req, res) {
             return res.status(404).json({ message: 'Video not found' });
         }
 
-        // Extract video key from the URL
+        // Extract the video key from the video URL
         const videoKey = video.filePath.split('.com/')[1];
-        const videoParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: videoKey };
-        await s3Client.send(new DeleteObjectCommand(videoParams));
+        await deleteFromS3({ Bucket: process.env.AWS_BUCKET_NAME, Key: videoKey });
 
         // Delete preview images from S3
-        for (const imagePath of video.previewImages) {
+        const deletePreviewImagePromises = video.previewImages.map(imagePath => {
             const imageKey = imagePath.split('.com/')[1];
-            const imageParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: imageKey };
-            await s3Client.send(new DeleteObjectCommand(imageParams));
-        }
+            return deleteFromS3({ Bucket: process.env.AWS_BUCKET_NAME, Key: imageKey });
+        });
 
-        // Remove video document from database
+        await Promise.all(deletePreviewImagePromises);
+
+        // Remove the video document from the database
         await Video.findByIdAndDelete(videoId);
 
-        // Remove the video ID from the admin user's uploadedVideos array
+        // Update the admin user's uploaded videos
         adminUser.uploadedVideos = adminUser.uploadedVideos.filter(
             idObj => idObj.toString() !== videoId
         );
