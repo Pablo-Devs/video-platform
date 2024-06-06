@@ -79,28 +79,37 @@ video-platform/
 ├── public/                # Static files like CSS, JavaScript, and images
 │   ├── css/
 │   │   └── styles.css
-│   ├── js/
-│   │   └── scripts.js
-│   └── images/
+│   │   └── tailwind.css
+│   ├── scripts/
+│   │   └── admin-signup.js
+│   │   └── dashboard.js
+│   │   └── forgot-password.js
+│   │   └── home.js
+│   │   └── login.js
+│   │   └── signup.js
+│   │   └── videoPage.js
+│   ├── icons/
 ├── views/                 # EJS templates for rendering the front-end
-│   ├── auth/
-│   │   ├── login.ejs
-│   │   ├── register.ejs
-│   │   └── resetPassword.ejs
-│   ├── partials/
-│   │   ├── header.ejs
-│   │   └── footer.ejs
-│   ├── admin/
 │   │   ├── dashboard.ejs
-│   │   └── uploadVideo.ejs
-│   ├── video/
-│   │   ├── videoPage.ejs
-│   │   └── videoList.ejs
-│   └── index.ejs
+│   │   └── admin-signup.ejs
+│   │   └── forgot-password.ejs
+│   │   └── home.ejs
+│   │   └── index.ejs
+│   │   └── login.ejs
+│   │   └── signup.ejs
+│   │   └── videos.ejs
+│   ├── patials/
+│   │   ├── header.ejs
+│   │   ├── footer.ejs
+│   │   └── videoHeader.ejs
 ├── .gitignore             # Files and directories to be ignored by Git
+├── .gitattributes         # Handle large video files uploaded on github
+├── ER-Diagram.png         # ER Diagram of Database
 ├── package.json           # Project metadata and dependencies
+├── package-lock.json      #
 ├── README.md              # Project documentation
 └── server.js              # Main entry point of the application
+└── tailwind.config.js     # Tailwind css configuration
 ```
 
 ## Contributing
@@ -122,7 +131,5 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Contact
 
 For any inquiries or feedback, please contact Paul Blankson (AKA: Pablo-Devs).
-    ```sh
-    https://www.instagram.com/pablo_devs/
-    ```
 
+- Instagram: https://www.instagram.com/pablo_devs/
