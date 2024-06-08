@@ -9,6 +9,7 @@ import fetchVideosRoutes from './routes/fetchVideosRoutes.js';
 import videoUploadRoutes from './routes/videoUploadRoutes.js';
 import videoAnalyticsRoutes from './routes/videoAnalyticsRoutes.js';
 import { checkUser } from './middlewares/authMiddlewares.js';
+import mongoSanitize from 'express-mongo-sanitize';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,6 +22,9 @@ app.use(express.json());
 
 // Middleware to parse cookies
 app.use(cookieParser());
+
+// Middleware to sanitize user input
+app.use(mongoSanitize());
 
 // Emulate __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
