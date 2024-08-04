@@ -10,6 +10,8 @@ import videoUploadRoutes from './routes/videoUploadRoutes.js';
 import videoAnalyticsRoutes from './routes/videoAnalyticsRoutes.js';
 import { checkUser } from './middlewares/authMiddlewares.js';
 import mongoSanitize from 'express-mongo-sanitize';
+import expressWinston from 'express-winston';
+import logger from './logger.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -25,6 +27,13 @@ app.use(cookieParser());
 
 // Middleware to sanitize user input
 app.use(mongoSanitize());
+
+// Middleware to log requests
+app.use(expressWinston.logger({
+    winstonInstance: logger,
+    statusLevels: true,
+    colorize: true
+}));
 
 // Emulate __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -54,7 +63,7 @@ app.use('/', videoAnalyticsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    logger.error(err.stack);
     res.status(500).json({ message: 'Internal server error' });
 });
 
